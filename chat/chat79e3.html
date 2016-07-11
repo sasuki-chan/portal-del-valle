@@ -1,0 +1,3930 @@
+<!DOCTYPE HTML>
+<html>
+
+<!-- Mirrored from www.fivehost.com.br/chat/chat.php?code=U0VSVkVSUEFHRQ__ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 31 May 2016 04:25:41 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+<META NAME="description" CONTENT="LiveZilla - Live Support Software [livezilla.net]">
+<META NAME="keywords" CONTENT="LiveZilla, Live, Support, Customer Support, Live Chat, Live Help">
+<META NAME="author" CONTENT="LiveZilla GmbH">
+<META NAME="Copyright" CONTENT="LiveZilla GmbH">
+<META NAME="generator" CONTENT="LiveZilla GmbH - http://www.livezilla.net">
+<META NAME="audience" CONTENT="All">
+<META NAME="robots" CONTENT="index,follow">
+<META http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>www.fivehost.com.br - Live Chat</title>
+<link rel="stylesheet" type="text/css" href="templates/style_chat.min.css">
+<script language="javaScript" type="text/javascript">
+//window.onerror = lz_global_handle_exception;
+window.onbeforeunload = lz_chat_before_unload;
+window.onunload = lz_chat_unload;
+
+var lz_chat_data = new lz_chat_data_box();
+var lz_poll_request;
+var lz_shout_request;
+var lz_resize_interval = null;
+var lz_title_timer;
+var lz_title_step = 0;
+var lz_title_modes = new Array(document.title,"New Messages");
+var lz_chat_rate_settings = new Array(0,0);
+var lz_chat_feedback_comment_started = false;
+var lz_chat_feedback_comment_sent = false;
+var lz_document_head = document.getElementsByTagName("head")[0];
+var lz_geo_resolution;
+var lz_geo_resolution_needed = false;
+var lz_user_id = "0a9ec673b7";
+var lz_browser_id = "13eaa3e231";
+var lz_server_id = "58c93";
+var lz_geo_url = "chatf7df.html?aid=&amp;sid=MjM2YWExNjVkMWJjNGI4OQ==&amp;dbp=1";
+var lz_mip = "186.125.xxx.xxx";
+var lz_oak = '';
+var lz_is_ie = false;
+
+var lz_shared_kb_auto_search = true;
+var lz_shared_kb_last_search_time = 0;
+
+
+
+lz_chat_data.TempImage.onload=lz_chat_show_intern_image;
+lz_chat_data.TempImage.onerror=new function(){
+};
+lz_chat_data.GeoResolution = new lz_geo_resolver();
+
+lz_chat_detect_sound();
+
+if(true)
+    window.resizeTo(610,760);
+
+function lz_get_session()
+{
+	return lz_chat_data.ExternalUser.Session;
+}
+
+function lz_chat_remove_from_parent()
+{
+	if(window.opener != null)
+	{
+
+		try
+		{
+			if(typeof(window.opener.lz_tracking_remove_chat_window) != 'undefined')
+				window.opener.lz_tracking_remove_chat_window(lz_chat_data.ExternalUser.Session.BrowserId);
+		}
+		catch(ex)
+		{
+		 // domain restriction
+		}
+	}
+}
+
+function lz_chat_announce_to_parent()
+{
+    try
+    {
+        if(window.opener != null)
+        {
+            if(typeof(window.opener.lz_tracking_add_chat_window) != 'undefined')
+            {
+                window.opener.lz_tracking_add_chat_window(lz_chat_data.ExternalUser.Session.BrowserId,false);
+                if(lz_chat_data.WindowAnnounce == null)
+                    lz_chat_data.WindowAnnounce = setTimeout("lz_chat_data.WindowAnnounce=null;lz_chat_announce_to_parent();",2000);
+                if(lz_chat_data.ParentURI==null && window.opener.location.href!=null)
+                    lz_chat_data.ParentURI = window.opener.location.href;
+            }
+        }
+    }
+    catch(ex)
+    {
+     // domain restriction
+    }
+}
+
+function lz_chat_unload()
+{
+    if(lz_chat_data.CurrentApplication=="chat" && lz_chat_data.Status.Status >= lz_chat_data.STATUS_INIT)
+    {
+        lz_chat_stop_system();
+
+        if(lz_poll_request != null)
+            lz_poll_request.TimeoutConnection();
+
+        if(lz_shout_request != null)
+            lz_shout_request.TimeoutConnection();
+
+        var closeSessionConnect = new lz_connector("server.html",lz_chat_get_post_values("logoff",false,false),10000);
+        closeSessionConnect.ConnectAsync();
+    }
+}
+
+function lz_chat_before_unload()
+{
+    if((lz_chat_data.CurrentApplication=="chat"||lz_chat_data.CurrentApplication=="callback") && lz_chat_data.Status.Status >= lz_chat_data.STATUS_INIT)
+    {
+        lz_chat_switch_options(true);
+        if(lz_chat_data.FeedbackURL != null && lz_chat_data.FeedbackOnExit && lz_chat_data.Status.Status >= lz_chat_data.STATUS_ACTIVE && lz_chat_show_feedback(false))
+            return "Do you like to rate our Representative?";
+        else if(lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+            return "Do you really want to close this chat now?";
+    }
+}
+
+function lz_chat_set_translation(_activeId,_from,_into)
+{
+    _into = lz_global_base64_decode(_into).toLowerCase();
+    _from = lz_global_base64_decode(_from).toLowerCase();
+
+    _into = (_into.length==0) ? null : _into;
+    _from = (_from.length==0) ? null : _from;
+
+    if(lz_chat_data.TranslationActive != _activeId)
+    {
+        lz_chat_data.TranslationActive = _activeId;
+        lz_chat_get_frame_object('lz_chat_translation_target_language').disabled = (_from == null);
+        lz_chat_get_frame_object('lz_translation_service_active').checked = (_from != null);
+    }
+    else
+        return;
+
+    if(lz_chat_data.TranslateFrom != _from && _from != null)
+    {
+        lz_chat_data.TranslateFrom = _from;
+        for(var i=0;i<lz_chat_get_frame_object('lz_chat_translation_target_language').options.length;i++)
+        {
+            if(lz_chat_get_frame_object('lz_chat_translation_target_language').options[i].value==_from)
+                lz_chat_get_frame_object('lz_chat_translation_target_language').selectedIndex = i;
+        }
+    }
+    if(lz_chat_data.TranslateInto != _into)
+        lz_chat_data.TranslateInto = _into;
+}
+
+function lz_chat_chat_resize_detect(_on)
+{
+    if(_on && lz_resize_interval == null)
+        lz_resize_interval = setInterval("lz_chat_chat_resize_input();",500);
+}
+
+function lz_chat_chat_resize_input()
+{
+    try
+    {
+        var tbheight = parseInt(lz_chat_get_frame_object('lz_chat_text').style.height.replace("px",""));
+        lz_chat_get_frame_object('lz_chat_floor').style.height = tbheight+30+"px";
+        lz_chat_get_frame_object('lz_chat_main').style.bottom = tbheight+30+"px";
+    }
+    catch(ex)
+    {
+    }
+}
+
+function lz_chat_init_rating_drop_down(_cntdwn)
+{
+
+}
+
+function lz_chat_rating_drop_down()
+{
+
+}
+
+function lz_chat_change_browser_id(_newId)
+{
+    lz_chat_data.ExternalUser.Session.BrowserId = _newId;
+    lz_chat_data.ExternalUser.Session.Save();
+}
+	
+function lz_chat_set_parentid()
+{			
+	lz_chat_data.ExternalUser.Session = new lz_jssess();
+	lz_chat_data.ExternalUser.Session.Load();
+	try
+	{
+		if(window.opener != null && typeof(window.opener.lz_get_session) != 'undefined')
+		{
+			lz_chat_data.ExternalUser.Session.UserId = window.opener.lz_get_session().UserId;
+			if(lz_chat_data.ExternalUser.Session.GeoResolved.length == 0)
+				lz_chat_data.ExternalUser.Session.GeoResolved = window.opener.lz_get_session().GeoResolved;
+		}
+	}
+	catch(ex){
+    }
+	lz_chat_data.ExternalUser.Session.Save();
+}
+
+function lz_chat_startup()
+{
+	if(lz_chat_data.Groups == null)
+	{
+		lz_chat_data.Groups = new lz_group_list(lz_chat_get_frame_object(''),lz_chat_get_frame_object('lz_form_groups'));
+        lz_chat_data.Groups.StatusIcon = !lz_chat_data.IsSmall && !false;
+		lz_chat_data.Groups.CreateHeader("Please select");
+        lz_chat_reload_groups();
+	}
+	lz_chat_announce_to_parent();
+}
+
+function lz_chat_reload_groups()
+{
+	if(lz_chat_data.Status.Status > lz_chat_data.STATUS_START)
+		return;
+
+	if(!lz_chat_data.Status.Loaded)
+	{
+		lz_chat_change_group(lz_chat_get_frame_object('lz_form_groups'),false);
+		lz_chat_server_request("server.html",lz_chat_get_post_values("reloadgroups",true,true),30000,null);
+	}
+	else
+	{
+		if(!lz_chat_data.ConnectionRunning)
+			lz_chat_server_request("server.html",lz_chat_get_post_values("reloadgroups",false,true),30000,null);
+	}
+}
+
+function lz_chat_get_post_data(_action)
+{
+    var fd = new FormData();
+    fd.append("p_request","extern");
+
+    if(lz_chat_data.WaitingLinksShow)
+        fd.append("p_wls","1");
+
+    if(lz_chat_data.CallMeBackMode)
+        fd.append("p_cmb","1");
+
+    if(_action == "send_mail")
+    {
+        fd.append("p_action","mail");
+        fd.append("p_username",lz_global_base64_url_encode(lz_chat_data.ExternalUser.Username));
+        fd.append("p_group",lz_global_base64_url_encode(lz_chat_data.ExternalUser.Group));
+        fd.append("p_email",lz_global_base64_url_encode(lz_chat_data.ExternalUser.Email));
+        fd.append("p_company",lz_global_base64_url_encode(lz_chat_data.ExternalUser.Company));
+        fd.append("p_question",lz_global_base64_url_encode(lz_chat_data.ExternalUser.MailText));
+        fd.append("p_phone",lz_global_base64_url_encode(lz_chat_data.ExternalUser.Phone));
+
+        for(var i=0;i<10;i++)
+        {
+            if(lz_chat_data.InputFieldValues[i].Active && lz_chat_data.InputFieldValues[i].Index.toString().length==1 && lz_chat_data.InputFieldValues[i].Value.toString().length>0)
+            {
+                if(lz_chat_data.InputFieldValues[i].Type != "File")
+                    fd.append("p_cf" + lz_chat_data.InputFieldValues[i].Index, lz_global_base64_url_encode(lz_chat_data.InputFieldValues[i].Value));
+                else if(lz_chat_data.InputFieldValues[i].Type == "File" && lz_chat_data.InputFieldValues[i].Value != null)
+                {
+                    fd.append("p_cf" + lz_chat_data.InputFieldValues[i].Index, lz_chat_get_frame_object('').getElementsByName("form_" + lz_chat_data.InputFieldValues[i].Index)[0].files[0]);
+                    lz_chat_data.InputFieldValues[i].Value = null;
+                }
+            }
+        }
+
+        if(lz_chat_data.ParentURI != null)
+            fd.append("p_url",lz_global_base64_url_encode(lz_chat_data.ParentURI));
+        if(lz_chat_data.InternalUser != null && lz_chat_data.InternalUser.Id != "")
+            fd.append("p_requested_intern_userid",lz_global_base64_url_encode(lz_chat_data.InternalUser.Id));
+    }
+
+    if(lz_chat_data.Id != '')
+        fd.append("p_cid",lz_global_base64_url_encode(lz_chat_data.Id));
+
+    fd.append("p_extern_userid",lz_global_base64_url_encode(lz_chat_data.ExternalUser.Session.UserId));
+    fd.append("p_extern_browserid",lz_global_base64_url_encode(lz_chat_data.ExternalUser.Session.BrowserId));
+    return fd;
+}
+
+function lz_chat_get_post_values(_action, _groups, _params)
+{
+	var values = "p_request=extern";
+
+    if(lz_chat_data.WaitingLinksShow)
+        values += "&p_wls=1";
+
+	if(_action == "listen" || _action == "shout")
+	{
+		values += "&p_action=listen&p_gl_a="+lz_global_base64_url_encode(lz_chat_data.PollHash)+"&p_gl_acid="+lz_global_base64_url_encode(lz_chat_data.PollAcid);
+
+        if(lz_chat_data.ExternalUser.Username != lz_chat_data.Language.Guest)
+            values += "&p_username="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Username);
+
+        values += "&p_group="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Group)+"&p_email="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Email)+"&p_company="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Company)+"&p_phone="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Phone)+"&p_question="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Question);
+		values += "&p_acid="+Math.random()+((lz_chat_data.ExternalUser.Typing)?"&p_typ="+lz_global_base64_url_encode(1):"");
+
+		if(lz_chat_get_frame_object('lz_chat_transcript_email') != null)
+			values += "&p_tc_email=" + lz_global_base64_url_encode(lz_global_trim(lz_chat_get_frame_object('lz_chat_transcript_email').value));
+		if(lz_chat_get_frame_object('lz_chat_send_chat_transcript') != null && '<!--transcript_option_display-->' != 'none' && !lz_chat_get_frame_object('lz_chat_send_chat_transcript').checked)
+			values += "&p_tc_declined=1";
+		
+		if(lz_chat_data.InternalUser != null && lz_chat_data.InternalUser.Id != null)
+			values += "&p_requested_intern_userid=" + lz_global_base64_url_encode(lz_chat_data.InternalUser.Id);
+
+		if(lz_chat_data.CallMeBackMode)
+			values += "&p_cmb=" + lz_global_base64_url_encode(1);
+
+        for(var i=0;i<lz_chat_data.InputFieldIndices.length;i++)
+			if(lz_chat_data.InputFieldValues[i].Value != null && lz_chat_data.InputFieldValues[i].Value.length>0 && lz_chat_data.InputFieldValues[i].Index.toString().length==1)
+				values += "&p_cf" + lz_chat_data.InputFieldIndices[i] + "=" + lz_global_base64_url_encode(lz_chat_data.InputFieldValues[i].Value);
+
+		if(lz_chat_data.ComChatVoucherActive != null)
+			values += "&p_tid="+lz_global_base64_url_encode(lz_chat_data.ComChatVoucherActive.Id);
+			
+		if(_action == "shout")
+			values += "&p_shout="+lz_global_base64_url_encode(1);
+		else if(lz_chat_data.LastConnectionFailed)
+			values += "&p_lcf="+lz_global_base64_url_encode(1);
+	}
+	else if(_action == "logoff")
+	{
+		values += "&p_action=logoff";
+        if(lz_chat_data.ExternalUser.Username != lz_chat_data.Language.Guest)
+		    values += "&p_username=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.Username)+"&p_group="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Group)+"&p_email="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Email)+"&p_company="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Company);
+	}
+	else if(_action == "reloadgroups")
+	{
+		values += "&p_action=reloadgroups";
+		values += "&p_requested_intern_userid=" + lz_global_base64_url_encode(lz_chat_data.InternalUser.Id);
+		values += "&p_tzo=" + lz_global_base64_url_encode(lz_chat_data.TimezoneOffset) + "&p_cd="+ lz_global_base64_url_encode(window.screen.colorDepth);
+		values += "&p_resh="+ lz_global_base64_url_encode(screen.height) + "&p_resw="+ lz_global_base64_url_encode(screen.width);
+	}
+	else if(_action == "send_mail")
+	{
+		values += "&p_action=mail";
+		values += "&p_username=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.Username) + "&p_group="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Group)+"&p_email="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Email)+"&p_company="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Company)+"&p_question="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.MailText)+"&p_phone="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Phone);
+
+        if(lz_chat_data.CallMeBackMode)
+            values += "&p_cmb=" + lz_global_base64_url_encode(1);
+
+        if(lz_chat_data.ParentURI != null)
+            values += "&p_url=" + lz_global_base64_url_encode(lz_chat_data.ParentURI);
+        if(lz_chat_data.InternalUser != null && lz_chat_data.InternalUser.Id != "")
+            values += "&p_requested_intern_userid=" + lz_global_base64_url_encode(lz_chat_data.InternalUser.Id);
+
+		for(var i=0;i<=13;i++)
+			if(lz_chat_data.InputFieldValues[i].Value.toString().length>0 && lz_chat_data.InputFieldValues[i].Index.toString().length==1)
+				values += "&p_cf" + lz_chat_data.InputFieldValues[i].Index + "=" + lz_global_base64_url_encode(lz_chat_data.InputFieldValues[i].Value);
+	}
+	else if(_action == "rate")
+	{
+		values += "&p_action=rate";
+		values += "&p_username=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.Username) + "&p_group="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Group)+"&p_email="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Email)+"&p_company="+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Company)+"&p_requested_intern_userid="+lz_global_base64_url_encode(lz_chat_data.InternalUser.Id);
+	}
+    else if(_action == "search_kb")
+    {
+        values += "&p_action=search_kb";
+        values += "&p_q=" + lz_global_base64_url_encode(_params);
+    }
+	
+	if(lz_chat_data.Id != '')
+		values += "&p_cid=" + lz_global_base64_url_encode(lz_chat_data.Id);
+		
+	values +="&p_extern_userid=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.Session.UserId) + "&p_extern_browserid=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.Session.BrowserId);
+
+    if(lz_geo_resolution_needed && lz_chat_data.ExternalUser.Session.GeoResolved.length == 7)
+        values += "&geo_lat=" + lz_global_base64_url_encode(lz_global_base64_decode(lz_chat_data.ExternalUser.Session.GeoResolved[0])) + "&geo_long=" + lz_global_base64_url_encode(lz_global_base64_decode(lz_chat_data.ExternalUser.Session.GeoResolved[1])) + "&geo_region=" + lz_global_base64_url_encode(lz_global_base64_decode(lz_chat_data.ExternalUser.Session.GeoResolved[2])) + "&geo_city=" + lz_global_base64_url_encode(lz_global_base64_decode(lz_chat_data.ExternalUser.Session.GeoResolved[3])) + "&geo_tz=" + lz_global_base64_url_encode(lz_global_base64_decode(lz_chat_data.ExternalUser.Session.GeoResolved[4])) + "&geo_ctryiso=" + lz_global_base64_url_encode(lz_global_base64_decode(lz_chat_data.ExternalUser.Session.GeoResolved[5])) + "&geo_isp=" + lz_global_base64_url_encode(lz_global_base64_decode(lz_chat_data.ExternalUser.Session.GeoResolved[6]));
+    values += "&geo_rid=" + lz_global_base64_url_encode(lz_chat_data.GeoResolution.Status);
+    if(lz_chat_data.GeoResolution.Span > 0)
+        values += "&geo_ss=" + lz_global_base64_url_encode(lz_chat_data.GeoResolution.Span);
+
+    return values;
+}
+
+function lz_chat_login(_groupId) 
+{
+	lz_chat_get_frame_object('lz_form_groups').disabled = false;
+	
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,111)].Active)
+		if(lz_chat_data.ExternalUser.Username != lz_chat_data.Language.Guest)
+            lz_chat_data.ExternalUser.Username = lz_chat_get_frame_object('').getElementsByName('form_111')[0].value.substr(0,255);
+
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,112)].Active)
+		lz_chat_data.ExternalUser.Email = lz_chat_get_frame_object('').getElementsByName('form_112')[0].value.substr(0,255);
+		
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,113)].Active)
+		lz_chat_data.ExternalUser.Company = lz_chat_get_frame_object('').getElementsByName('form_113')[0].value.substr(0,255);
+	
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,114)].Active)
+		lz_chat_data.ExternalUser.Question = lz_chat_get_frame_object('').getElementsByName('form_114')[0].value.substr(0,64000);
+
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,116)].Active || lz_chat_data.CallMeBackMode)
+		lz_chat_data.ExternalUser.Phone = lz_chat_get_frame_object('').getElementsByName('form_116')[0].value.substr(0,255);
+
+	lz_chat_set_status(lz_chat_data.STATUS_INIT);
+	if(lz_chat_data.ConnectionRunning)
+	{
+		setTimeout("lz_chat_login('"+_groupId+"');",100);
+		return;
+	}
+	lz_chat_data.ExternalUser.Group=_groupId;
+	lz_chat_data.PermittedFrames=1;
+	if(lz_chat_data.ExternalUser.Username.length == 0)
+		lz_chat_data.ExternalUser.Username = lz_chat_data.Language.Guest;
+
+    for(var i = 0;i < lz_chat_data.InputFieldValues.length;i++)
+        lz_chat_data.InputFieldValues[i].SetStatus("lz_chat_frame_lgin.1.0",false);
+
+	lz_chat_check_connection();
+	lz_chat_get_frame_object('').lz_login_form.submit();
+}
+
+function lz_chat_activate()
+{
+    lz_chat_data.ChatActive = true;
+    lz_chat_get_frame_object('lz_chat_navigation_table').style.display = '';
+    lz_chat_get_frame_object('lz_chat_floor').style.display = '';
+    lz_chat_get_frame_object('lz_chat_main').style.display = '';
+    lz_chat_get_frame_object('lz_chat_call_me_back_info').style.visibility = 'hidden';
+    lz_chat_get_frame_object('lz_chat_options').style.display = 'block';
+    lz_chat_set_status(lz_chat_data.Status.Status);
+    if(lz_chat_data.ComChatVoucherActive != null)
+    {
+        lz_chat_update_com_chat_data(false);
+        lz_chat_switch_com_chat_box(true);
+    }
+}
+
+function lz_chat_loaded() 
+{
+	if(lz_chat_data.ComChatVoucherActive != null)
+	{
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_period_spacer').style.display =
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_period_caption').style.display =
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_period_value').style.display = (lz_chat_data.ComChatVoucherActive.Expires > 0) ? "" : "none";
+		lz_chat_update_com_chat_data(false);
+		lz_chat_switch_com_chat_box(true);
+	}
+
+    if(lz_chat_data.CurrentApplication=="callback")
+    {
+        lz_chat_get_frame_object('lz_chat_call_me_back_info').style.visibility = 'visible';
+        lz_chat_get_frame_object('lz_chat_options').style.display = 'none';
+    }
+    else
+        lz_chat_activate();
+
+	lz_chat_get_frame_object('lz_chat_transcript_email').value=lz_chat_data.ExternalUser.Email;
+	lz_chat_get_frame_object('lz_chat_send_chat_transcript').checked = (lz_chat_data.ExternalUser.Email!='');
+
+    lz_chat_set_host('','','','',false,false,'',lz_chat_data.FeedbackPossible);
+
+    if(lz_chat_data.ExternalUser.Question.length > 0 && lz_chat_data.DynamicGroup == '')
+		lz_chat_add_system_text(-1,'<b>'+ lz_chat_data.Language.ClientTopic + '</b>:&nbsp;<i>'+lz_global_htmlentities(lz_chat_data.ExternalUser.Question)+'</i>');
+    else
+        lz_chat_message('',lz_chat_data.ExternalUser.Question);
+
+	lz_chat_listen();
+
+	if(window.opener != null)
+	{
+		try
+		{
+			if(typeof(window.opener.lz_tracking_poll_server) != 'undefined')
+			{
+				setTimeout("window.opener.lz_tracking_poll_server(1099);",5000);
+			}
+		}
+		catch(ex)
+		{
+		 // domain restriction
+		}
+	}
+}
+
+function lz_chat_listen() 
+{	
+	if(lz_chat_data.Status.Status > lz_chat_data.STATUS_START && lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+	{
+		if(!lz_chat_data.ConnectionRunning)
+			lz_chat_server_request("server.html",lz_chat_get_post_values("listen",false,true),lz_global_get_long_poll_runtime()*1000,null);
+		setTimeout("lz_chat_listen();",lz_chat_data.ChatFrequency * 1000);
+	}
+}
+
+function lz_chat_reshout()
+{	
+	lz_chat_data.ShoutRunning = false;
+	if(lz_chat_data.ShoutNeeded)
+		lz_chat_shout(4);
+}
+
+function lz_chat_shout(_call)
+{	
+	if(lz_chat_data.Status.Status == lz_chat_data.STATUS_ACTIVE)
+	{
+		if(!lz_chat_data.ShoutRunning)
+		{
+			lz_chat_data.ShoutRunning = true;
+			lz_chat_shout_request("server.html",lz_chat_get_post_values("shout",false,true),60000);
+			lz_chat_data.ShoutNeeded = false;
+		}
+		else
+		{
+			lz_chat_data.ShoutNeeded = true;
+		}
+	}
+	else
+		lz_chat_data.ShoutNeeded = true;
+}
+
+function lz_chat_listen_hash(_hash,_acid)
+{
+	lz_chat_data.PollHash = _hash;
+	lz_chat_data.PollAcid = _acid;
+}
+
+function lz_chat_server_request(_url, _post, _timeout, _errorEvent, _progressEvent)
+{	
+	if(lz_chat_data.ShoutNeeded && !lz_chat_data.ShoutRunning && lz_chat_data.Status.Status == lz_chat_data.STATUS_ACTIVE)
+	{
+		lz_chat_shout(5);
+		return;
+	}
+    lz_chat_data.ConnectionRunning = true;
+    if(lz_chat_data.GetParameters.length > 0)
+        _url += "?" + lz_chat_data.GetParameters;
+
+    lz_poll_request	= new lz_connector(_url,_post,_timeout);
+	lz_poll_request.OnEndEvent = lz_chat_handle_response;
+	if(_errorEvent==null)
+	{
+		lz_poll_request.OnErrorEvent =
+		lz_poll_request.OnTimeoutEvent = lz_chat_handle_connection_error;
+	}
+	else
+	{
+		lz_poll_request.OnErrorEvent =
+		lz_poll_request.OnTimeoutEvent = _errorEvent;
+	}
+    if(_progressEvent != null)
+        lz_poll_request.OnProgressEvent = _progressEvent;
+	lz_poll_request.ConnectAsync();
+}
+
+function lz_chat_shout_request(_url, _post, _timeout)
+{	
+	lz_chat_data.ShoutRunning = true;
+	if(lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+	{
+		var counter = 0;
+		for(var i in lz_chat_data.ExternalUser.MessagesSent)
+		{
+			_post += "&p_p" + counter.toString() + "=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.MessagesSent[i].MessageText) + "&p_i" + (counter).toString() + "=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.MessagesSent[i].MessageId);
+			if(lz_chat_data.ExternalUser.MessagesSent[i].MessageTranslation != '')
+			{
+				_post += "&p_pt" + counter.toString() + "=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.MessagesSent[i].MessageTranslation);
+				_post += "&p_ptiso" + counter.toString() + "=" + lz_global_base64_url_encode(lz_chat_get_frame_object('lz_chat_translation_target_language').options[lz_chat_get_frame_object('lz_chat_translation_target_language').selectedIndex].value);
+			}
+			counter++;
+		}
+		counter = 0;
+		for(var i in lz_chat_data.ExternalUser.MessagesReceived)
+			if(!lz_chat_data.ExternalUser.MessagesReceived[i].Received)
+				_post += "&pr_i" + (counter++).toString() + "=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.MessagesReceived[i].MessageId);
+	}
+	
+	if(lz_chat_data.GetParameters.length > 0)
+		_url += "?" + lz_chat_data.GetParameters;
+
+	lz_shout_request = new lz_connector(_url,_post,_timeout);
+	lz_shout_request.OnEndEvent = lz_chat_handle_shout_response;
+	lz_shout_request.OnErrorEvent =
+	lz_shout_request.OnTimeoutEvent = lz_chat_handle_connection_error;
+	lz_shout_request.ConnectAsync();
+}
+
+function lz_chat_check_connection()
+{
+	if(lz_chat_data.LastConnection < (lz_global_timestamp() - lz_chat_data.PollTimeout) && lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+	{
+		if(!lz_chat_data.ConnectionBroken)
+			lz_chat_add_system_text(-1,lz_chat_data.Language.ConnectionBroken);
+		lz_chat_data.ConnectionBroken = true;
+	}
+	else
+		lz_chat_data.ConnectionBroken = false;
+
+	setTimeout("lz_chat_check_connection();",5000);
+}
+
+function lz_chat_set_config(_timeout,_frequency)
+{
+	lz_chat_data.PollTimeout = _timeout;
+	lz_chat_data.ChatFrequency = _frequency;
+}
+
+function lz_chat_stop_system()
+{
+	window.status = "";
+	if(lz_chat_data.Status.Status > lz_chat_data.STATUS_INIT && lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+	{
+		lz_chat_get_frame_object('lz_chat_translation_target_language').disabled =
+		lz_chat_get_frame_object('lz_translation_service_active').disabled =
+		lz_chat_get_frame_object('lz_chat_transcript_email').disabled =
+		lz_chat_get_frame_object('lz_chat_send_chat_transcript').disabled =
+		lz_chat_get_frame_object('lz_chat_text').disabled = 
+		lz_chat_get_frame_object('lz_chat_submit').disabled = true;
+		lz_chat_set_host('','','','',false,false,'',lz_chat_data.FeedbackPossible);
+	}
+	lz_chat_set_status(lz_chat_data.STATUS_STOPPED);
+	lz_chat_set_intern_image(0,'',false);
+
+    if(!lz_chat_data.ChatActive)
+        lz_chat_activate();
+
+}
+
+
+function lz_chat_play_sound(_result)
+{
+    if(lz_chat_data.SoundsAvailable)
+    {
+        if(_result && lz_chat_data.SoundPlayerResult != null)
+            lz_chat_data.SoundPlayerResult.play();
+        else if(lz_chat_data.SoundPlayerMessage != null)
+            lz_chat_data.SoundPlayerMessage.play();
+    }
+}
+
+function lz_chat_switch_sound()
+{
+	lz_chat_data.SoundsAvailable = !lz_chat_data.SoundsAvailable;
+	if(lz_chat_data.SoundsAvailable)
+		lz_chat_get_frame_object('lz_chat_sound_button').src = "images/button_s1.gif";
+	else
+		lz_chat_get_frame_object('lz_chat_sound_button').src = "images/button_s0.gif";
+}
+
+function lz_chat_detect_sound()
+{
+    try
+    {
+        var sa = document.createElement('audio');
+        var avail_ogg = sa.canPlayType('audio/ogg;');
+        var avail_mp3 = sa.canPlayType('audio/mpeg;');
+        lz_chat_data.SoundsAvailable = (avail_ogg || avail_mp3);
+        if(lz_chat_data.SoundsAvailable)
+        {
+            lz_chat_data.SoundPlayerMessage = new Audio((!avail_ogg) ? "./sound/message.mp3" : "./sound/message.ogg");
+            lz_chat_data.SoundPlayerResult = new Audio((!avail_ogg) ? "./sound/wind.mp3" : "./sound/wind.ogg");
+        }
+    }
+    catch(ex)
+    {
+
+    }
+}
+
+function lz_chat_set_group(_group)
+{
+	lz_chat_data.ExternalUser.Group = lz_global_base64_decode(_group);
+}
+
+function lz_chat_set_groups(_chatPossible, _groups, _errors, _selected)
+{
+    try
+    {
+        lz_chat_data.Groups.Update(_groups);
+        if(_errors.length > 0)
+        {
+            lz_chat_data.SetupError = _errors;
+            lz_chat_dialog(_errors,null,-1,null,null,true);
+        }
+        else
+        {
+            lz_chat_data.ChatGroupAvailable = _chatPossible;
+            if(lz_chat_data.PreselectTicket)
+                lz_chat_tab_set_active("ticket",false);
+            else if(!lz_chat_data.ChatGroupAvailable && lz_chat_data.CurrentApplication == "chat")
+                lz_chat_tab_set_active("ticket",false);
+            else if(lz_chat_data.CurrentApplication != "")
+                lz_chat_tab_set_active(lz_chat_data.CurrentApplication,false);
+            lz_chat_init_reload_groups();
+
+            if(false)
+            {
+                lz_chat_tab_set_active("knowledgebase",false);
+                lz_chat_get_frame_object('lz_chat_kb_input').value = lz_chat_get_input_value(114);
+                lz_chat_init_search_kb(false,false);
+            }
+
+        }
+    }
+    catch(ex)
+    {
+        if(lz_chat_data.Debug)
+            alert(ex);
+    }
+}
+
+function lz_chat_init_reload_groups()
+{
+    if(lz_chat_data.TimerReloadGroups != null)
+        clearTimeout(lz_chat_data.TimerReloadGroups);
+    lz_chat_data.TimerReloadGroups = setTimeout("lz_chat_reload_groups();",(90*1000)-10000);
+}
+
+
+function lz_chat_pre_change_group(_box)
+{
+    lz_chat_data.ForceSelectInit=true;
+}
+
+function lz_chat_change_group(_box,_userActivity)
+{
+    if(lz_chat_data.ForceGroupSelect && !lz_chat_data.ForceSelectMade && _box.selectedIndex == _box.childNodes.length-1)
+        return;
+
+    if(lz_chat_data.ForceGroupSelect && lz_chat_data.ForceSelectInit && !lz_chat_data.ForceSelectMade)
+    {
+        lz_chat_data.ForceSelectMade=true;
+        _box.removeChild(lz_chat_data.Groups.ForceSelectOption);
+        lz_chat_set_input_fields(lz_chat_data.SelectedGroup,lz_chat_get_frame_object(''));
+    }
+
+    var last = (lz_chat_data.SelectedGroup != null) ? lz_chat_data.SelectedGroup.Id+lz_chat_data.SelectedGroup.Amount : "";
+	lz_chat_data.SelectedGroup = (lz_chat_get_frame_object('') != null) ? lz_chat_data.Groups.GetGroupById(_box.value) : null;
+	if(lz_chat_data.SelectedGroup == null)
+	{
+		var position = _box.selectedIndex;
+		var reset = false;
+
+		while(lz_chat_data.SelectedGroup == null)
+		{
+			position++;
+			if(position == _box.childNodes.length)
+				if(!reset)
+				{
+					position = 0;
+					reset=true;
+				}
+				else
+					break;
+            if(_box.childNodes.length>0)
+			    lz_chat_data.SelectedGroup = lz_chat_data.Groups.GetGroupById(_box.childNodes[position].value);
+            else
+                break;
+		}
+	}
+
+    var current = (lz_chat_data.SelectedGroup != null) ? lz_chat_data.SelectedGroup.Id+lz_chat_data.SelectedGroup.Amount : "";
+
+	if(lz_chat_data.SelectedGroup != null)
+	{
+		if(_box.length > position)
+ 			_box.selectedIndex = position;
+
+        if(last != current)
+            lz_chat_tab_set_active(lz_chat_data.CurrentApplication,_userActivity);
+        _box.style.color = _box.childNodes[_box.selectedIndex].style.color;
+        _box.style.background = _box.childNodes[_box.selectedIndex].style.background;
+
+        lz_chat_get_frame_object('lz_chat_group_status').className = (lz_chat_data.SelectedGroup.Amount>0) ? "lz_chat_input_icon lz_chat_input_icon_online" : "lz_chat_input_icon lz_chat_input_icon_offline";
+    }
+}
+
+function lz_chat_set_input_fields(_selGroup,_document)
+{
+	if(lz_chat_data.InputFieldIndices != null)
+	{
+        var isChat = (lz_chat_data.CurrentApplication!="ticket" && _selGroup.Amount > 0);
+		var ihidden = (isChat) ? _selGroup.ChatInputsHidden : _selGroup.TicketInputsHidden;
+		var imandatory = (isChat) ? _selGroup.ChatInputsMandatory : _selGroup.TicketInputsMandatory;
+		var mandatoryFields = (lz_chat_data.CurrentApplication!="ticket" && _selGroup.ChatVouchersRequired.length > 0);
+		var isComChat = mandatoryFields && _selGroup.Amount > 0;
+
+		for(var i = 0;i < lz_chat_data.InputFieldIndices.length;i++)
+		{
+			var findex = lz_chat_data.InputFieldIndices[i];
+
+			if(_document.getElementById("lz_form_active_" + findex).value == "true" || (findex==116 && lz_chat_data.CallMeBackMode))
+			{
+				_document.getElementById("lz_form_" + findex).className = (findex==115 && isComChat) ? "lz_input lz_input_com" : "lz_input";
+				_document.getElementById("lz_form_" + findex).className = (findex==116 && lz_chat_data.CallMeBackMode) ? "lz_input lz_input_com" : _document.getElementById("lz_form_" + findex).className;
+
+                var hideInput = ( (lz_array_indexOf(ihidden,findex) > -1) || (lz_chat_data.ForceGroupSelect && !lz_chat_data.ForceSelectMade && lz_chat_data.InputFieldValues[i].IsHiddenGeneral(lz_chat_data.Groups.Groups,isChat)));
+
+                _document.getElementById("lz_form_" + findex).style.display = (hideInput) ? "none" : "";
+				_document.getElementById("lz_form_" + findex).style.display = (findex==115) ? ((isComChat) ? "" : "none") : _document.getElementById("lz_form_" + findex).style.display;
+				_document.getElementById("lz_form_" + findex).style.display = (findex==116 && lz_chat_data.CallMeBackMode) ? "" : _document.getElementById("lz_form_" + findex).style.display;
+                _document.getElementById("lz_form_" + findex).style.display = (lz_chat_data.InputFieldValues[i].Type == "File" && lz_chat_data.CurrentApplication=="chat") ? "none" : _document.getElementById("lz_form_" + findex).style.display;
+
+
+                if(_document.getElementById("lz_form_info_" + findex).innerHTML.length > 0)
+                {
+                    _document.getElementById("lz_form_mandatory_" + findex).className = "lz_input_icon lz_info";
+                    _document.getElementById("lz_form_mandatory_" + findex).style.display = "";
+                    _document.getElementById("lz_form_mandatory_" + findex).onclick = new Function("lz_chat_show_info_box('"+findex.toString()+"',true);");
+                    _document.getElementById("lz_form_info_" + findex).onclick = new Function("lz_chat_show_info_box('"+findex.toString()+"',false);");
+                }
+                else
+                    _document.getElementById("lz_form_mandatory_" + findex).style.display = "none";
+				
+				if(lz_array_indexOf(imandatory,findex) != -1 || (lz_chat_data.InputFieldValues[i].Validation && lz_array_indexOf(ihidden,findex) == -1))
+					mandatoryFields = true;
+			}
+			else
+				_document.getElementById("lz_form_" + findex).style.display = 'none';
+		}
+        lz_chat_get_frame_object('buy_voucher_button').style.display = (lz_chat_data.SelectedGroup.ChatVouchersRequired.length > 0 && _selGroup.Amount > 0 && lz_chat_data.CurrentApplication != "ticket") ? '' : 'none';
+    }
+}
+
+function lz_chat_show_info_box(_id,_active)
+{
+    lz_chat_get_frame_object('lz_form_info_' + _id).style.display = (lz_chat_get_frame_object('lz_form_info_' + _id).style.display!='block') ? 'block' : 'none';
+}
+
+function lz_chat_validate_group(_chat)
+{
+	var group = lz_chat_data.Groups.GetGroupById(lz_chat_get_frame_object('lz_form_groups').value);
+	if(group == null)
+	{
+		lz_chat_dialog(lz_chat_data.Language.SelectValidGroup,null,null,null,null);
+		return false;	
+	}
+    lz_chat_data.SelectedGroup = group;
+    if(_chat && lz_chat_data.SelectedGroup.Amount == 0)
+    {
+        if(true)
+            lz_chat_dialog(lz_chat_data.Language.ChatNotAvailable,null,new Function("lz_chat_tab_set_active('ticket',true);"),lz_chat_data.Language.LanguageLeaveMessageShort,null,true);
+        else
+            lz_chat_dialog(lz_chat_data.Language.ChatNotAvailable,null,null,lz_chat_data.Language.LanguageClose,null,true);
+        return false;
+    }
+	return true;
+}
+
+function lz_chat_bookmark()
+{
+	var title = 'd3d3LmZpdmVob3N0LmNvbS5icg==';
+	if(window.chrome)
+		alert('Your browser does not support this function.');
+	else if(window.sidebar) 
+		window.sidebar.addPanel(lz_global_base64_decode(title),self.location.href,"");
+	else if(window.external)
+		window.external.AddFavorite(self.location.href,lz_global_base64_decode(title));
+}  
+
+function lz_chat_goto_message(_inChat,_send)
+{
+	if(1 == 1)
+	{
+        lz_chat_alternative_ticket_page();
+		return false;
+	}
+	if(lz_chat_data.SetupError.length > 0)
+	{
+		lz_chat_dialog("This service is not available. We apologize for any inconvenience this may cause.",lz_chat_get_frame_object(''));
+		return false;
+	}
+    if(_inChat)
+    {
+        lz_chat_stop_system();
+        lz_chat_config_reset();
+        lz_chat_data.PermittedFrames = 1;
+        lz_chat_data.CurrentApplication = "ticket";
+        lz_chat_data.WindowNavigating = true;
+        lz_chat_data.DirectLogin = false;
+        document.getElementById("lz_chat_content").src = 'chat3a0f.html?template=lz_chat_frame_lgin&amp;' + lz_chat_data.GetParameters;
+        return false;
+    }
+    return true;
+}
+
+function lz_chat_config_reset()
+{
+    if(lz_chat_data.InternalUser != null)
+        lz_chat_data.InternalUser.Id = "";
+
+    lz_switch_title_mode(false);
+
+    lz_chat_data.LastSender = -2;
+    lz_chat_data.LastSound = 0;
+    lz_chat_data.QueuePostsAdded = false;
+    lz_chat_data.AlternateRow = true;
+    lz_chat_data.Groups = null;
+    lz_chat_data.Status.Loaded = false;
+
+    if(lz_chat_data.TimerWaiting != null)
+    {
+        clearTimeout(lz_chat_data.TimerWaiting);
+        lz_chat_data.TimerWaiting = null;
+    }
+
+    lz_chat_data.TimerReloadGroups = null;
+    lz_chat_data.QueueMessageAppended = false;
+    lz_chat_data.ConnectedMessageAppended = false;
+    lz_chat_data.WaitingMessageAppended = false;
+    lz_chat_data.Status.Status = lz_chat_data.STATUS_START;
+
+}
+
+function lz_chat_alternative_ticket_page()
+{
+    try
+    {
+        lz_chat_get_frame_object('lz_chat_login').style.display='none';
+        lz_chat_get_frame_object('lz_form_details').style.display='none';
+        lz_chat_get_frame_object('lz_chat_loading').style.display='';
+    }
+    catch(e)
+    {
+
+    }
+    lz_chat_change_url('http://clientes.fivehost.com.br/submitticket.php?step=2&amp;deptid=1',!true);
+    window.resizeTo(screen.width,screen.height);
+    window.screenX = 0;
+    window.screenY = 0;
+}
+
+function lz_load_input_values(_frame)
+{
+	for(var i = 0;i< lz_chat_data.InputFieldIndices.length;i++)
+	{
+		var findex = lz_chat_data.InputFieldIndices[i];
+		if(lz_chat_get_frame_object('').getElementById("lz_form_" + findex) != null)
+		{
+            if(lz_chat_data.InputFieldValues[i].Type == "File")
+                continue;
+			if(lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].tagName.toUpperCase() == "SELECT")
+				lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].selectedIndex = parseInt(lz_chat_data.InputFieldValues[i].Value);
+			else if(lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].type.toUpperCase() == "CHECKBOX")
+			{
+				if(lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].value=="")
+					lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].value = lz_chat_data.InputFieldValues[i].Value;
+				lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].checked = (parseInt(lz_chat_data.InputFieldValues[i].Value)==1);
+			}
+			else
+			{
+				if(lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].value=="")
+					lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].value = lz_global_trim(lz_chat_data.InputFieldValues[i].Value);
+			}
+		}
+	}
+}
+
+function lz_chat_show_setup_error(_setupError)
+{
+    lz_chat_dialog(_setupError,null,-1,null,null,true);
+}
+
+function lz_chat_release(_chatPossible, _setupError)
+{
+    if(lz_chat_data.Status.Loaded)
+        return;
+    if((!_chatPossible || !true) && 1 > 0)
+        return;
+    lz_chat_data.ChatGroupAvailable = _chatPossible;
+    lz_chat_get_frame_object('lz_chat_loading').style.display = "none";
+	if(_setupError.length != 0)
+	{
+        lz_chat_show_setup_error(_setupError);
+		return;
+	}
+	else
+	{
+        lz_chat_show_header();
+
+        lz_chat_get_frame_object('lz_tab_callback').style.display = (false) ? "" : "none";
+        lz_chat_get_frame_object('lz_tab_chat').style.display = (true) ? "" : "none";
+        lz_chat_get_frame_object('lz_tab_ticket').style.display = (true) ? "" : "none";
+        lz_chat_get_frame_object('lz_tab_knowledgebase').style.display = (true) ? "" : "none";
+
+
+		lz_load_input_values('lz_chat_frame_lgin.1.0');
+		lz_chat_set_status(lz_chat_data.STATUS_START);
+		var reload = lz_chat_data.Status.Loaded;
+		lz_chat_data.Status.Loaded = true;
+        if(!_chatPossible || (lz_chat_data.DirectLogin && (!lz_chat_validate_group(true) || !lz_check_missing_inputs(true,false,'lz_chat_check_login_inputs'))))
+            lz_chat_data.DirectLogin = false;
+		if(lz_chat_data.DirectLogin)
+		{
+			lz_chat_login(lz_chat_data.Groups.GetGroupById(lz_chat_get_frame_object('lz_form_groups').value).Id);
+			return;
+		}
+		else if(!lz_chat_data.KBOnly)
+		{
+			lz_chat_get_frame_object('lz_chat_login').style.visibility = 'visible';
+            lz_chat_get_frame_object('lz_chat_navigation').style.display = 'block';
+			lz_chat_get_frame_object('lz_action_button').disabled = false;
+		}
+	}
+	if(!lz_chat_data.ValidationRequired)
+		lz_chat_get_frame_object('lz_form_details').style.display = '';
+	if(lz_chat_data.CheckoutExtendSuccess)
+		lz_chat_buy_voucher_navigate('voucher_extend_success');
+	else if(lz_chat_data.CheckoutOnly)
+		lz_chat_buy_voucher_navigate('voucher_select');
+    lz_chat_get_frame_object('').getElementsByName("form_111")[0].focus();
+
+    lz_chat_init_search_kb("%ALL%");
+}
+
+function lz_check_missing_inputs(_display,_alert,_contFunc)
+{
+	if(lz_chat_data.Id.length > 0)
+		return true;
+
+	var missingInput = false;
+	var imandatory = (lz_chat_data.CurrentApplication=="chat") ? lz_chat_data.SelectedGroup.ChatInputsMandatory : lz_chat_data.SelectedGroup.TicketInputsMandatory;
+	var ihidden = (lz_chat_data.CurrentApplication=="chat") ? lz_chat_data.SelectedGroup.ChatInputsHidden : lz_chat_data.SelectedGroup.TicketInputsHidden;
+
+	for(var i = 0;i < lz_chat_data.InputFieldIndices.length;i++)
+	{
+		var findex = lz_chat_data.InputFieldIndices[i];
+		if(lz_chat_data.InputFieldValues[i].Active || (findex == 116 && lz_chat_data.CallMeBackMode))
+		{
+            var isFilled = (lz_chat_data.InputFieldValues[i].Type == "CheckBox") ? lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].checked : lz_global_trim(lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].value).length > 0;
+			if((((findex == 115 && lz_chat_data.SelectedGroup.ChatVouchersRequired.length > 0 && lz_chat_data.CurrentApplication=="chat") || (lz_array_indexOf(ihidden,findex) == -1 && (lz_array_indexOf(imandatory,findex) != -1 || lz_chat_data.InputFieldValues[i].Validation))) || (findex == 116 && lz_chat_data.CallMeBackMode)) && !isFilled)
+			{
+				if(_display)
+                {
+                    lz_chat_get_frame_object("lz_form_mandatory_" + findex).className = "lz_input_icon lz_required";
+                    lz_chat_get_frame_object("lz_form_mandatory_" + findex).style.display = "";
+                }
+				missingInput = true;
+			}
+			else
+            {
+			    if(lz_chat_get_frame_object("lz_form_info_" + findex).innerHTML.length > 0)
+                {
+                    lz_chat_get_frame_object("lz_form_mandatory_" + findex).className = "lz_input_icon lz_info";
+                    lz_chat_get_frame_object("lz_form_mandatory_" + findex).style.display = "";
+                }
+                else
+                    lz_chat_get_frame_object("lz_form_mandatory_" + findex).style.display = "none";
+            }
+		}
+	}
+
+    lz_chat_get_frame_object("lz_form_mandatory").style.display = (missingInput) ? '' : 'none';
+	if(missingInput)
+	{
+		if(lz_chat_data.CurrentApplication!="chat")
+		{
+			lz_chat_get_frame_object('lz_chat_loading').style.display='none';
+			lz_chat_get_frame_object('lz_form_details').style.display='';
+		}
+		if(_alert)
+			lz_chat_dialog(lz_chat_data.Language.FillMandatoryFields,null,null,null,null,true);
+		return false;
+	}
+	else
+		return lz_validate_inputs(_contFunc,ihidden);
+}
+
+function lz_validate_inputs(_contFunc,_hidden)
+{
+	lz_chat_data.ValidationRequired = false;
+	for(var i = 0;i < lz_chat_data.InputFieldValues.length;i++)
+	{
+		lz_chat_data.InputFieldValues[i].SetStatus(true,false);
+	}
+
+	for(var i = 0;i < lz_chat_data.InputFieldValues.length;i++)
+	{
+		if(lz_chat_data.InputFieldValues[i].Active && lz_chat_data.InputFieldValues[i].Validation && !lz_chat_data.InputFieldValues[i].Validated && lz_array_indexOf(_hidden,lz_chat_data.InputFieldIndices[i]) == -1)
+		{
+			lz_chat_data.ValidationRequired = true;
+			lz_chat_data.InputFieldValues[i].ValidationResult = null;
+			lz_chat_get_frame_object('lz_action_button').style.cursor =
+			lz_chat_get_frame_object('').body.style.cursor='wait';
+			lz_chat_get_frame_object('lz_action_button').disabled = true;
+			lz_chat_get_frame_object('lz_form_groups').disabled = true;
+			lz_chat_data.InputFieldValues[i].Validate(_contFunc);
+			return false;
+		}
+		else if((lz_chat_data.CurrentApplication=="chat" || lz_chat_data.CurrentApplication=="callback") && lz_chat_data.ComChatInput == null && lz_chat_data.InputFieldValues[i].Index == 115 && lz_chat_data.SelectedGroup.ChatVouchersRequired.length > 0)
+		{
+			var einput = lz_chat_data.InputFieldValues[i];
+			lz_chat_data.ComChatInput = new lz_chat_input(115,true,einput.Caption,einput.InfoText,einput.Name,einput.Type,lz_global_base64_encode(einput.Value),true,lz_global_base64_encode("validate4ace.html?value=<!--value-->&amp;intgroup=" + lz_chat_data.SelectedGroup.Id),5,false);
+			lz_chat_data.ValidationRequired = true;
+			lz_chat_data.ComChatInput.Validated = einput.Validated;
+			lz_chat_data.ComChatInput.Caption = einput.Caption;
+			lz_chat_data.ComChatInput.ValidationResult = null;
+			lz_chat_get_frame_object('lz_action_button').style.cursor =
+			lz_chat_get_frame_object('').body.style.cursor='wait';
+			lz_chat_get_frame_object('lz_action_button').disabled = true;
+			lz_chat_get_frame_object('lz_form_groups').disabled = true;
+			lz_chat_data.ComChatInput.Validate(_contFunc);
+			return false;
+		}
+	}
+	return true;
+}
+
+function lz_validate_com_chat_input_result(_result,_inuse,_reason,_voucherid,_chatTime,_chatTimeMax,_chatSessions,_chatSessionsMax,_expires,_expired)
+{
+	if(!_result)
+	{
+		lz_chat_data.ComChatVoucherActive = null;
+		if(_inuse)
+			lz_chat_dialog(lz_chat_data.Language.ClientVoucherInUse,null,null,null,null,true);
+		else if(_reason==0)
+			lz_chat_dialog(lz_chat_data.Language.ClientInvalidComChatAccount,null,null,null,null,true);
+		else
+			lz_chat_dialog(lz_chat_data.Language.ClientEmptyComChatAccount,null,null,null,null,true);
+	}
+	else
+	{
+		lz_chat_data.ComChatVoucherActive = new lz_chat_com_chat_ticket();
+		lz_chat_data.ComChatVoucherActive.Id = _voucherid;
+		lz_chat_data.ComChatVoucherActive.ChatTime = _chatTime;
+		lz_chat_data.ComChatVoucherActive.ChatTimeMax = _chatTimeMax;
+		lz_chat_data.ComChatVoucherActive.ChatSessions = _chatSessions;
+		lz_chat_data.ComChatVoucherActive.ChatSessionsMax = _chatSessionsMax;
+		lz_chat_data.ComChatVoucherActive.Expires = _expires;
+    	lz_chat_data.ComChatVoucherActive.Expired = _expired;
+	}
+	lz_validate_input_result(_result,115);
+}
+
+function lz_chat_add_update_vouchers_init(_changeHTML)
+{
+	lz_chat_data.ComChatVouchers = new Array();
+	lz_chat_data.ComChatVoucherChangeHTML = lz_global_base64_decode(_changeHTML);
+	lz_chat_get_frame_object('lz_chat_com_chat_change_voucher').style.display = (lz_chat_data.ComChatVoucherChangeHTML.length > 0) ? "" : "none";
+}
+
+function lz_chat_add_available_voucher(_id,_chatTime,_chatTimeMax,_chatSessions,_chatSessionsMax,_expires,_expired)
+{
+	var voucher = new lz_chat_com_chat_ticket();
+	voucher.Id = _id;
+	voucher.ChatTime = _chatTime;
+	voucher.ChatTimeMax = _chatTimeMax;
+	voucher.ChatSessions = _chatSessions;
+	voucher.ChatSessionsMax = _chatSessionsMax;
+	voucher.Expires = _expires;
+	voucher.Expired = _expired;
+	lz_chat_data.ComChatVouchers.push(voucher);
+	if(_id == lz_chat_data.ComChatVoucherActive.Id)
+		lz_chat_data.ComChatVoucherActive = voucher;
+	lz_chat_get_frame_object('lz_chat_com_chat_change_voucher').style.display = (lz_chat_data.ComChatVouchers.length >= 2) ? "" : "none";
+}
+
+function lz_chat_extend_voucher()
+{
+	void(window.open('chat8879.html?intgroup='+lz_global_base64_url_encode(lz_chat_data.ExternalUser.Group)+'&co='+lz_global_base64_url_encode(lz_chat_data.ComChatVoucherActive.Id),'','width=610,height=760,left=0,top=0,resizable=yes,menubar=no,location=no,status=yes,scrollbars=yes'));
+}
+
+function lz_validate_input_result(_result,_id)
+{
+	for(var i = 0;i < lz_chat_data.InputFieldValues.length;i++)
+    	lz_chat_data.InputFieldValues[i].SetStatus("lz_chat_frame_lgin.1.0",true);
+	var failed = false;
+	for(var i = 0;i < lz_chat_data.InputFieldValues.length;i++)
+	{
+		if(lz_chat_data.InputFieldValues[i].Index != _id || lz_chat_data.InputFieldValues[i].Validated)
+			continue;
+		if(lz_chat_data.InputFieldValues[i].ValidationResult != null)
+			continue;
+			
+		var cinput = lz_chat_data.InputFieldValues[i];
+		if((lz_chat_data.CurrentApplication=="chat" || lz_chat_data.CurrentApplication=="callback") && _id == 115 && lz_chat_data.SelectedGroup.ChatVouchersRequired.length > 0)
+			cinput = lz_chat_data.ComChatInput
+
+		cinput.Validated = true;
+		cinput.ValidationResult = _result;
+		clearTimeout(cinput.ValidationTimeoutObject);
+		if(_result === false)
+			failed = true;
+		else if(_result === -1)
+		{
+			if(cinput.ValidationContinueOnTimeout)
+			{
+				cinput.ValidationResult = true;
+				lz_chat_get_frame_object('').body.style.cursor='default';
+				eval(cinput.ValidationContinueAt);
+				return;
+			}
+			else
+				failed = true;
+		}
+		else if(_result === true)
+		{
+			lz_chat_get_frame_object('').body.style.cursor='default';
+			eval(cinput.ValidationContinueAt);
+			return;
+		}
+
+		if(failed)
+		{
+			if(lz_chat_data.CurrentApplication!="chat")
+				lz_chat_get_frame_object('').getElementById('lz_chat_loading').style.display='none';
+			lz_chat_get_frame_object('').getElementById('lz_form_details').style.display='';
+			lz_chat_get_frame_object('lz_action_button').disabled = false;
+			lz_chat_get_frame_object('').getElementById("lz_form_mandatory_" + cinput.Index).style.display = "";
+            lz_chat_get_frame_object('lz_action_button').style.cursor =
+			lz_chat_get_frame_object('').body.style.cursor='default';
+			lz_chat_get_frame_object('lz_form_groups').disabled = false;
+			if(cinput != lz_chat_data.ComChatInput)
+				lz_chat_dialog(lz_chat_data.Language.ClientInvalidData + "<br><br>" + cinput.Caption.replace(":","") + "<br><br>" + cinput.InfoText,null,null,null,null,true);
+			cinput.Validated = false;
+			for(var x=0;x< lz_chat_data.InputFieldValues.length;x++)
+				lz_chat_data.InputFieldValues[x].Validated = false;
+			if(cinput.Index == 115)
+				lz_chat_data.ComChatInput = null;
+			return;
+		}
+	}
+}
+
+function lz_chat_check_login_inputs()
+{
+	if(!lz_chat_validate_group(true))
+		return;
+	if(!lz_check_missing_inputs(true,true,'lz_chat_check_login_inputs'))
+		return;
+	lz_chat_login(lz_chat_data.SelectedGroup.Id);
+}
+
+function lz_chat_validate_ticket_inputs()
+{
+    if(!lz_chat_validate_group(false))
+        return;
+
+	if(!lz_check_missing_inputs(true,true,'lz_chat_validate_ticket_inputs'))
+		return;
+
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,111)].Active)
+        lz_chat_data.ExternalUser.Username = lz_chat_get_frame_object('').getElementsByName("form_111")[0].value.substr(0,255);
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,112)].Active)
+		lz_chat_data.ExternalUser.Email = lz_chat_get_frame_object('').getElementsByName("form_112")[0].value.substr(0,255);
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,113)].Active)
+		lz_chat_data.ExternalUser.Company = lz_chat_get_frame_object('').getElementsByName("form_113")[0].value.substr(0,255);
+	if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,114)].Active)
+		lz_chat_data.ExternalUser.MailText = lz_chat_get_frame_object('').getElementsByName("form_114")[0].value.substr(0,64000);
+    if(lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,116)].Active || lz_chat_data.CallMeBackMode)
+		lz_chat_data.ExternalUser.Phone = lz_chat_get_frame_object('').getElementsByName('form_116')[0].value.substr(0,255);
+	
+	lz_chat_data.ExternalUser.Group = lz_chat_get_frame_object('lz_form_groups').value;
+	lz_chat_send_ticket();
+}
+
+function lz_chat_is_file_upload()
+{
+    try
+    {
+        var test = new FormData();
+    }
+    catch(e)
+    {
+        return false
+    }
+
+    for(var i = 0;i< lz_chat_data.InputFieldIndices.length;i++)
+    {
+        var findex = lz_chat_data.InputFieldIndices[i];
+        if(lz_chat_get_frame_object('').getElementById("lz_form_" + findex) != null)
+            if(!lz_chat_input_is_hidden(findex) && lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].tagName.toUpperCase() == "INPUT" && lz_chat_get_frame_object('').getElementsByName("form_" + findex)[0].type.toUpperCase() == "FILE")
+                return true;
+    }
+
+    return false;
+}
+
+function lz_chat_input_is_hidden(_findex)
+{
+    if(lz_chat_get_frame_object("lz_form_" + _findex).style.display == "none")
+        return true;
+    return false;
+}
+
+var doReset = false;
+
+function lz_chat_send_ticket()
+{
+	lz_chat_get_frame_object('lz_action_button').disabled=true;
+	lz_chat_get_frame_object('lz_action_button').style.cursor='wait';
+    if(lz_chat_is_file_upload())
+        lz_chat_server_request("server.html",lz_chat_get_post_data("send_mail",false,true),0,null,lz_chat_mail_progress);
+    else
+	    lz_chat_server_request("server.html",lz_chat_get_post_values("send_mail",false,true),20000,null,null);
+}
+
+function lz_chat_mail_progress(evt)
+{
+    if (evt.lengthComputable)
+    {
+        var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+        lz_chat_get_frame_object('lz_action_button').value = lz_chat_data.Language.SendMessage + " ("+ percentComplete+ "%)";
+    }
+}
+
+function lz_chat_mail_callback(_success)
+{
+	lz_chat_get_frame_object('lz_action_button').style.cursor='pointer';
+	lz_chat_get_frame_object('lz_chat_loading').style.display='none';
+    lz_chat_get_frame_object('lz_action_button').disabled = false;
+    lz_chat_get_frame_object('lz_form_groups').disabled = false;
+
+    lz_chat_get_frame_object('').getElementsByName("lz_login_form")[0].reset();
+    lz_chat_change_group(lz_chat_get_frame_object('lz_form_groups'),false);
+
+    if(_success)
+	{
+        lz_chat_data.CurrentApplication = "";
+        for(var i=0;i < lz_chat_get_frame_object('').getElementsByTagName("textarea").length;i++)
+            lz_chat_get_frame_object('').getElementsByTagName("textarea")[i].value="";
+		lz_chat_get_frame_object('lz_chat_ticket_success').style.display='';
+        lz_chat_get_frame_object('lz_form_details').style.display='none';
+        lz_chat_get_frame_object('lz_input_header_box').style.display='none';
+        lz_chat_get_frame_object('lz_tab_ticket').className = "lz_chat_navigation_tab";
+        lz_chat_get_frame_object('lz_tab_callback').className = "lz_chat_navigation_tab";
+	}
+	else
+	{
+		lz_chat_dialog(lz_chat_data.Language.MessageFlood,null,null,null,null,true);
+        lz_chat_tab_set_active("ticket",true);
+	}
+}
+
+function lz_chat_close()
+{
+	var windowName = window.name;
+	if(lz_chat_data.GetParameters.indexOf("&dl=") != -1)
+		lz_chat_data.GetParameters = lz_chat_data.GetParameters.replace("&dl=MQ__","");
+
+	if(lz_chat_data.GetParameters.indexOf("mp") == -1)
+		lz_chat_change_url("chatd41d.html?"+lz_chat_data.GetParameters + "&mp=MQ__", false);
+	else
+		lz_chat_change_url("chatd41d.html?"+lz_chat_data.GetParameters, false);
+	window.name = windowName;
+}
+
+function lz_chat_geo_result(_lat,_long,_region,_city,_tz,_ctryi2,_isp)
+{
+	lz_chat_data.GeoResolution.OnTimeoutEvent = null;
+	lz_chat_data.ExternalUser.Session.GeoResolved = Array(_lat,_long,_region,_city,_tz,_ctryi2,_isp);
+	lz_chat_data.ExternalUser.Session.Save();
+	lz_chat_startup();
+}
+
+function lz_chat_geo_resolute()
+{
+	lz_chat_data.GeoResolution.SetStatus(1);
+	lz_chat_data.GeoResolution.OnEndEvent = "lz_chat_geo_result";
+	lz_chat_data.GeoResolution.OnTimeoutEvent = lz_chat_geo_failure;
+	lz_chat_data.GeoResolution.OnSpanEvent = "lz_chat_set_geo_span";
+	lz_chat_data.GeoResolution.ResolveAsync();
+}
+
+function lz_chat_set_geo_span(_timespan)
+{
+	lz_chat_data.GeoResolution.SetSpan(_timespan);
+}
+
+function lz_chat_geo_failure()
+{
+	lz_chat_data.GeoResolution.SetSpan(30);
+	lz_chat_data.GeoResolution.SetStatus(4);
+	lz_chat_startup();
+}
+
+function lz_chat_show_waiting_links(_html)
+{
+    lz_chat_data.WaitingLinksShow = true;
+    if(lz_global_base64_decode(_html).length>0)
+        lz_chat_add_system_text(99,_html);
+}
+
+function lz_global_replace_smilies(_text)
+{
+	var shorts = new Array(/:-\)/g,/::smile/g,/:\)/g,/:-\(/g,/::sad/g,/:\(/g,/:-]/g,/::lol/g,/;-\)/g,/::wink/g,/;\)/g,/:'-\(/g,/::cry/g,/:-O/g,/::shocked/g,/:-\\\\/g,/::sick/g,/:-p/g,/::tongue/g,/:-P/g,/:\?/g,/::question/g,/8-\)/g,/::cool/g,/zzZZ/g,/::sleep/g,/:-\|/g,/::neutral/g);
+	var images = new Array("smile","smile","smile","sad","sad","sad","lol","lol","wink","wink","wink","cry","cry","shocked","shocked","sick","sick","tongue","tongue","tongue","question","question","cool","cool","sleep","sleep","neutral","neutral");
+	for(var i = 0;i<shorts.length;i++)
+		_text = _text.replace(shorts[i]," <img border=0 src='./images/smilies/"+images[i]+".gif'> ");
+	return _text;
+}
+
+function lz_chat_tab_set_active(_application, _userActivity)
+{
+    try
+    {
+        for(var i = 0;i < lz_chat_data.InputFieldValues.length;i++)
+            lz_chat_data.InputFieldValues[i].SetStatus('lz_chat_frame_lgin.1.0',true);
+        if(_userActivity && !lz_chat_data.ChatGroupAvailable)
+            if(_application=="chat")
+            {
+                if(true)
+                {
+                    lz_chat_dialog(lz_chat_data.Language.ChatNotAvailable,null,new Function("lz_chat_tab_set_active('ticket',true);"),lz_chat_data.Language.LanguageLeaveMessageShort,null,true);
+                    return;
+                }
+            }
+
+        if(_application == "ticket" && !true)
+            _application = "chat";
+
+        lz_chat_data.CurrentApplication = _application;
+        lz_chat_data.CallMeBackMode = (_application == "callback");
+
+        if(lz_chat_data.SelectedGroup != null)
+        {
+            lz_chat_set_input_fields(lz_chat_data.SelectedGroup,lz_chat_get_frame_object(''));
+            lz_load_input_values('lz_chat_frame_lgin.1.0');
+        }
+
+        var tab = lz_chat_get_frame_object("lz_tab_"+lz_chat_data.CurrentApplication);
+        var items = tab.parentNode.getElementsByTagName("li");
+        var infoIcon = "./images/chat_header_icon_"+lz_chat_data.CurrentApplication+".png";
+
+        lz_chat_get_frame_object("lz_form_mandatory").style.display = 'none';
+        lz_chat_show_header();
+
+        var _onlineOnly = true;
+        var online = ((lz_chat_data.SelectedGroup != null && lz_chat_data.SelectedGroup.Amount > 0) || lz_chat_data.NoPreChatMessages);
+        var infoFieldText = "";
+        var infoFieldTitle = "";
+        var buttonTitle = "";
+        var buttonTarget = lz_chat_check_login_inputs;
+
+        lz_chat_get_frame_object('lz_chat_ticket_success').style.display='none';
+        lz_chat_get_frame_object('lz_chat_login').style.display = (_application != "knowledgebase" && !lz_chat_data.CheckoutActive) ? '' : 'none';
+        lz_chat_get_frame_object('lz_chat_knowledgebase').style.display= (_application == "knowledgebase") ? '' : 'none';
+
+        if(_application == "ticket")
+        {
+            if(lz_chat_data.CheckoutActive)
+                lz_chat_buy_voucher_navigate('cancel',false);
+
+            //infoFieldText = lz_chat_data.Language.LanguageLeaveMessageInformation;
+            //infoFieldText += (infoFieldText.length > 0) ? ("<br>" + lz_chat_data.SelectedGroup.TicketInformation) : lz_chat_data.SelectedGroup.TicketInformation;
+
+            infoFieldText = (lz_chat_data.SelectedGroup.TicketInformation.length > 0) ? lz_chat_data.SelectedGroup.TicketInformation : lz_chat_data.Language.LanguageLeaveMessageInformation;
+            infoFieldTitle = lz_chat_data.Language.LanguageLeaveMessage;
+            buttonTitle = lz_chat_data.Language.SendMessage;
+            lz_chat_get_frame_object('lz_form_details').style.display = "";
+            lz_chat_get_frame_object('lz_group_selection_box').style.display = (lz_chat_data.HideGroupTicket) ? "none" : "";
+            buttonTarget=lz_chat_validate_ticket_inputs;
+
+            if(!lz_chat_goto_message(false,false))
+                return false;
+        }
+        else if(_application == "callback")
+        {
+            infoFieldText += (infoFieldText.length > 0) ? ("<br>" + lz_chat_data.SelectedGroup.CallMeBackInformation) : lz_chat_data.SelectedGroup.CallMeBackInformation;
+            infoFieldText = ((infoFieldText.length > 0) ? infoFieldText : lz_chat_data.Language.ClientRequestInstantCallbackInfo);
+            infoFieldTitle = lz_chat_data.Language.ClientRequestInstantCallback;
+            buttonTitle = (online) ? lz_chat_data.Language.ClientCallMeNow : lz_chat_data.Language.SendMessage;
+            buttonTarget= (online) ? lz_chat_check_login_inputs : lz_chat_validate_ticket_inputs;
+            lz_chat_get_frame_object('lz_form_details').style.display = "";
+        }
+        else if(_application == "knowledgebase")
+        {
+            infoFieldText = "Search our Knowledgebase to find answer to most common problems.";
+            infoFieldTitle = "Knowledgebase";
+            lz_chat_get_frame_object('lz_chat_knowledgebase').style.visibility = 'visible';
+
+        }
+        else if(_application == "chat")
+        {
+            infoFieldText = "";//lz_global_base64_decode(lz_chat_data.Language.InfoFieldText);
+            infoFieldText += (infoFieldText.length > 0) ? ("<br>" + lz_chat_data.SelectedGroup.ChatInformation) : lz_chat_data.SelectedGroup.ChatInformation;
+            infoFieldText = ((infoFieldText.length > 0) ? infoFieldText : ((lz_chat_data.SelectedGroup.ChatVouchersRequired.length > 0) ? lz_chat_data.Language.StartChatInformation + "&nbsp;" + lz_chat_data.Language.StartChatComInformation : lz_chat_data.Language.StartChatInformation));
+            infoFieldTitle = lz_chat_data.Language.StartChatHeader;
+            buttonTitle = lz_chat_data.Language.StartChat;
+            lz_chat_get_frame_object('lz_form_details').style.display = (lz_chat_data.ChatGroupAvailable || !true) ? "" : "none";
+            lz_chat_get_frame_object('lz_group_selection_box').style.display = (lz_chat_data.HideGroupChat) ? "none" : "";
+        }
+
+        var isOperatorPreselect = (lz_chat_data.InternalUser != null && lz_chat_data.InternalUser.Id != "" && _application != "knowledgebase");
+        if(isOperatorPreselect)
+            lz_chat_get_frame_object('lz_header_icon_operator').src = "picturecb95.php?intid="+lz_global_base64_url_encode(lz_chat_data.InternalUser.Id);
+
+        lz_chat_get_frame_object('lz_header_icon_operator').style.visibility = (isOperatorPreselect) ? 'visible' : 'hidden';
+        lz_chat_get_frame_object('lz_header_icon_operator_close').style.visibility = (isOperatorPreselect) ? 'visible' : 'hidden';
+        infoFieldTitle += (isOperatorPreselect) ? "<span id='lz_header_target'>(" + lz_chat_data.InternalUser.Fullname + ")</span>" : "";
+        lz_chat_get_frame_object('lz_action_button').value = buttonTitle;
+        lz_chat_get_frame_object('lz_header_title').innerHTML = infoFieldTitle;
+        lz_chat_get_frame_object('lz_form_info_field').innerHTML = infoFieldText;
+        lz_chat_get_frame_object('lz_action_button').onclick=buttonTarget;
+
+        lz_chat_get_frame_object('lz_header_type_icon').style.backgroundImage= (!isOperatorPreselect) ? "url("+infoIcon+")" : "";
+
+        for (var i = 0;i<items.length;i++)
+        {
+            var chatstatus = "";
+            if(items[i].id=="lz_tab_chat")
+                chatstatus = " lz_chat_navigation_tab_chat";
+            var cn = 'lz_chat_navigation_tab' + chatstatus;
+            if(tab.id==items[i].id)
+                cn = 'lz_chat_navigation_tab lz_chat_navigation_tab_active' + chatstatus;
+            items[i].className = cn;
+        }
+
+        lz_chat_get_frame_object('lz_chat_navigation_status').className = (online) ? "lz_chat_navigation_status_online" : "lz_chat_navigation_status_offline";
+        var spacer = (lz_chat_get_frame_object('lz_tab_chat').getElementsByTagName("span")[1].innerHTML.trim().length-9)*3;
+        lz_chat_get_frame_object('lz_chat_navigation_status').style.marginLeft = (-18+spacer)+"px";
+        return true;
+    }
+    catch(ex)
+    {
+
+    }
+}
+
+function lz_chat_unset_operator()
+{
+    lz_chat_data.InternalUser.Id = "";
+    lz_chat_tab_set_active(lz_chat_data.CurrentApplication,true);
+}
+
+function lz_chat_init_search_kb(_reset,_backgroundSearch)
+{
+    if(!true || (_backgroundSearch && !lz_chat_data.KnowledgebaseSuggest))
+        return;
+
+    var phrase = lz_chat_get_frame_object('lz_chat_kb_input').value;
+
+    if(_reset)
+        lz_chat_data.KBLastSearchPhrase = '';
+
+    if(phrase.length < 1)
+        phrase = "%ALL%";
+    else if(!_backgroundSearch && phrase.length < 4)
+    {
+        lz_chat_dialog("Your search phrase is too short. Please enter a minimum of <!--min_length--> characters.".replace("<!--min_length-->",4),null,null,null,null);
+        return;
+    }
+
+    if(phrase != lz_chat_data.KBLastSearchPhrase)
+    {
+        if(!lz_chat_data.KBSearchActive)
+        {
+            lz_chat_data.KBBackgroundSearch = _backgroundSearch;
+            lz_chat_data.KBLastSearchPhrase = phrase;
+            lz_shared_kb_last_search_time = lz_global_timestamp();
+            lz_chat_data.KBReSearch = false;
+            lz_chat_data.KBSearchActive = true;
+            lz_chat_server_request("server.html",lz_chat_get_post_values("search_kb",false,phrase),5000,lz_chat_search_after,null);
+            lz_chat_get_frame_object('lz_chat_kb_results').innerHTML = '<br><br><br><img src=\"images/chat_loading.gif\">';
+        }
+        else
+            lz_chat_data.KBReSearch = true;
+    }
+}
+
+var kbsoundplayed = false;
+function lz_chat_search_result(_result,_count)
+{
+    lz_chat_get_frame_object('lz_chat_kb_match_info').style.display = (_count > 0 && lz_chat_data.KBBackgroundSearch) ? "block" : "none";
+    if(!kbsoundplayed && lz_chat_data.KBLastSearchCount < _count && lz_chat_data.KBBackgroundSearch)
+    {
+        kbsoundplayed = true;
+        lz_chat_play_sound(true);
+    }
+
+    lz_chat_data.KBLastSearchCount = _count;
+    if(!lz_chat_search_after())
+        lz_chat_get_frame_object('lz_chat_kb_results').innerHTML = lz_global_base64_decode(_result);
+
+    lz_chat_kb_show_icon(_count);
+    lz_chat_resize();
+}
+
+function lz_chat_kb_show_icon(_count)
+{
+    var show = _count!=0 && lz_global_get_window_width() > 400;
+    lz_chat_get_frame_object('lz_chat_kb_icon').style.visibility = (show) ? 'visible' : 'hidden';
+    lz_chat_get_frame_object('lz_chat_kb_icon').innerHTML = _count.toString();
+    lz_chat_get_frame_object('lz_chat_kb_icon').style.background = lz_chat_data.PrimaryColor;
+
+    if(show)
+    {
+        var spacer = (lz_chat_get_frame_object('lz_tab_knowledgebase').getElementsByTagName("span")[0].innerHTML.trim().length-13)*6;
+        lz_chat_get_frame_object('lz_chat_kb_icon').style.marginLeft = (92+spacer)+"px";
+    }
+}
+
+function lz_chat_kb_deactivate()
+{
+    lz_shared_kb_auto_search = false;
+    lz_chat_get_frame_object('lz_chat_kb_match_info').style.display = "none";
+}
+
+function lz_chat_search_after()
+{
+    lz_chat_get_frame_object('lz_chat_kb_results').innerHTML = '';
+    lz_chat_data.KBSearchActive = false;
+
+    if(lz_chat_data.KBReSearch)
+    {
+        lz_chat_init_search_kb(lz_chat_get_frame_object('lz_chat_kb_input').value);
+        return true;
+    }
+    return false;
+}
+
+function lz_chat_show_kb_entry(_id)
+{
+    var src = "knowledgebase5445.html?id=" + _id + "&epc=" + lz_global_base64_url_encode(lz_chat_data.PrimaryColor) + "&etc=" + lz_global_base64_url_encode(lz_chat_data.SecondaryColor);
+    if(lz_chat_get_frame_object('lz_chat_dialog_resource').attachEvent)
+        window.open(src,'','width=590,height=760,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes');
+    else
+        lz_chat_dialog(null,null,null,lz_chat_data.Language.Close,null,true,new Array(0.80,0.94),src,true);
+}
+
+function lz_chat_resize()
+{
+    lz_chat_show_header();
+}
+
+function lz_chat_kb_scroll(_elem)
+{
+    lz_chat_get_frame_object('lz_chat_kb_navigation_top').style.display = (_elem.scrollTop>300) ? "block" : "none";
+    var sw = 100;
+    lz_chat_get_frame_object('cats').style.marginTop = (_elem.scrollTop>sw) ? (_elem.scrollTop-sw) + "px" : "0";
+}
+
+function lz_chat_resize_area_int(_a,_b,_c)
+{
+
+
+}
+
+
+function lz_chat_data_box()
+{
+	this.Id = '';
+    this.Debug = false;
+    this.IsMobile = false;
+    this.IsSmall = false;
+    this.IsLogo = true;
+    this.FeedbackOnExit = !false && true;
+    this.KnowledgebaseSuggest = true;
+    this.IsIOS = false;
+	this.ComChatInput = null;
+	this.ComChatVouchers = null;
+	this.ComChatVoucherChangeHTML = "";
+	this.ComChatVoucherActive = null;
+	this.ComChatSessionTimer = null;
+	this.Language = new lz_chat_data_language();
+	this.Templates = new lz_chat_data_templates();
+	this.InternalUser = new lz_chat_internal_user();
+	this.ExternalUser = new lz_chat_external_user();
+	this.Status = new lz_chat_status();
+	this.LastSender = -2;
+	this.LastSound = 0;
+	this.QueuePostsAdded = false;
+	this.AlternateRow = true;
+    this.FeedbackPossible = true;
+	this.SetupError = (lz_global_base64_decode('VGhpcyBzZXJ2aWNlIGlzIG5vdCBhdmFpbGFibGUuIFdlIGFwb2xvZ2l6ZSBmb3IgYW55IGluY29udmVuaWVuY2UgdGhpcyBtYXkgY2F1c2Uu'));
+	this.PermittedFrames = 1;
+	this.LastConnection = 0;
+    this.Rated = false;
+	this.CurrentApplication = (true) ? "chat" : ((false) ? "callback" : ((true) ? "ticket" : ((true) ? "knowledgebase" : "chat")));
+    this.WaitingLinksShow = false;
+	this.ChatFrequency = 4;
+	this.PollTimeout = 90;
+    this.ShowOperatorInfoBox = true;
+	this.CallMeBackMode = false;
+	this.ChatActive = false;
+	this.PollHash = '';
+	this.PollAcid = '';
+    this.ParentURI = null;
+	this.DynamicGroup = "";
+	this.ShoutNeeded = false;
+	this.ShoutRunning = false;
+	this.ConnectionBroken = false;
+	this.ConnectionRunning = false;
+	this.LastConnectionFailed = false;
+    this.PrimaryColor = "#73be28";
+    this.SecondaryColor = "#448800";
+    this.TopMargin = 130;
+    this.ForceGroupSelect = false;
+    this.HideGroupChat = false;
+    this.HideGroupTicket = false;
+    this.FeedbackURL = null;
+    this.ForceSelectInit = false;
+    this.ForceSelectMade = false;
+	this.DirectLogin = false;
+    this.PreselectTicket = false;
+	this.CheckoutOnly = false;
+	this.CheckoutExtendSuccess = false;
+	this.SoundsAvailable = false;
+	this.SoundPlayerMessage = null;
+    this.SoundPlayerResult = null;
+	this.Groups = null;
+	this.TimerTyping = null;
+	this.PreMessage = null;
+	this.TimerWaiting = null;
+    this.TimerReloadGroups = null;
+	this.GetParameters = 'code=U0VSVkVSUEFHRQ__';
+	this.TempImage = new Image();
+	this.TimezoneOffset = (new Date().getTimezoneOffset() / 60) * -1;
+	this.GeoResolution;
+	this.QueueMessageAppended = false;
+	this.ConnectedMessageAppended = false;
+	this.WaitingMessageAppended = false;
+	this.ValidationRequired = false;
+	this.WindowUnloaded = false;
+	this.WindowNavigating = false;
+	this.WindowAnnounce = null;
+	this.MessageCount = 1;
+    this.MessageCountReceived = 0;
+    this.CheckoutActive = false;
+
+    this.DialogSource;
+    this.DialogObjectParent;
+    this.DialogObject;
+
+    this.KBLastSearchPhrase = null;
+    this.KBLastSearchTime = 0;
+    this.KBLastSearchCount = 0;
+    this.KBSearchActive = false;
+    this.KBReSearch = false;
+    this.KBBackgroundSearch = false;
+    this.KBOnly = false;
+
+	this.SelectedGroup = null;
+	this.Members = new Array();
+	this.MembersPrevious = new Array();
+	this.ChatGroupAvailable = false;
+	this.InputFieldIndices = null;
+	this.InputFieldValues = null;
+    this.TranslateActive = null;
+    this.TranslateFrom = null;
+    this.TranslateInto = null;
+
+	this.SYSTEM = -1;
+	this.INTERNAL = 0;
+	this.EXTERNAL = 1;
+	this.MAXCHATLENGTH = 64000;
+	this.STATUS_STOPPED = 4;
+	this.STATUS_ACTIVE = 3;
+	this.STATUS_ALLOCATED = 2;
+	this.STATUS_INIT = 1;
+	this.STATUS_START = 0;
+	this.FILE_UPLOAD_OVERSIZED = 2;
+	this.FILE_UPLOAD_REJECTED = 1;
+	this.IMAGE_FILE_UPLOAD_SUCCESS = '../404.html';
+	
+	function lz_chat_status()
+	{
+		this.Status = 0;
+		this.Loaded = false;
+	}
+	
+	function lz_chat_data_language()
+	{
+		this.JoinGroup = "You joined the group <!--group_name-->.";
+		this.LeaveGroup = "You left the group <!--group_name-->.";
+		this.FillMandatoryFields = "Please fill all required fields.";
+		this.FillMandatoryFields = "Please fill all required fields.";
+		this.SelectValidGroup = "Please select valid department.";
+		this.LanguageLeaveMessageShort = "Leave Message";	
+		this.LanguageLeaveMessage = "Please leave a message";
+		this.LanguageLeaveMessageInformation = "Leave a message and we will come back to you shortly. Please provide as many details as possible along with your contact information.";
+		this.SendMessage = "Send Message";	
+		this.StartChat = "Start Chat";
+        this.StartChatHeader = "Start Chat";
+		this.StartChatInformation = "Welcome to our Online Support! To help us serve you better, please provide some information before initiating the chat with a representative.";
+		this.StartChatComInformation = "Please note that a valid chat voucher is required in order to initiate chat.";
+		this.StartSystem = "System is getting started.";
+		this.ConnectionBroken = "Connection error, trying to reconnect. Please be patient ...";
+		this.MessageTooLong = "This message is too long. In order to send this message it must be shortened.";
+		this.MessageReceived = "<b>Thank you!</b><br>We have received your message and will be responding to your enquiry as soon as possible.";
+		this.MessageFlood = "You have sent too many messages. Please wait some time and try again.";
+		this.RequestPermission = "Requesting permission for upload ...";
+		this.StartUpload = "Click on SEND to upload selected file";
+		this.SelectFile = "Please select file for upload.";
+		this.FileProvided = "Your file has been provided to our representative!";
+		this.RepresentativeLeft = "The representative has already left this conversation.";
+		this.SelectRating = "<!--lang_client_please_rate-->";
+		this.TransmittingFile = "Transmitting your file ...";
+		this.Guest = "Guest";
+		this.ClientForwarding = "You will be forwarded to another representative, please be patient.";
+		this.ClientInternArrives = "<!--intern_name--> enters the chatroom.";
+		this.ClientErrorUnavailable = "This service is not available. We apologize for any inconvenience this may cause.";
+		this.ClientIntLeft = "The representative has left the conversation. If you have further questions please";
+		this.ClientInternLeft = "<!--intern_name--> has left the chatroom.";
+		this.ClientIntDeclined = "All available representatives are currently occupied. Your request could not be served. We apologize for any inconvenience this may cause. Please try again later or";
+		this.ClientStillWaitingInt = "We are still trying to connect you, please be patient. If you don't want to wait please";
+		this.ClientThankYou = "Thank you!";
+		this.ClientIntIsConnected = "A representative will be connected, please be patient.";
+		this.ClientNoInternUsers = "No representative of this department is available. Please try again later or switch to another department. You can also";
+		this.ClientNoInternUsersShort = "No representative of this department is available. Please try again later or switch to another department.";
+		this.ClientErrorGroups = "This service is deactivated for the following reason: No department is allowed to accept external chats. We apologize for any inconvenience this may cause.";
+		this.ClientInvalidData = "The information given is invalid:";
+		this.ClientTopic = "Topic";
+		this.ClientInvalidComChatAccount = "This chat voucher code could not be found in our database. Please buy a chat voucher first.";
+		this.ClientEmptyComChatAccount = "Your chat voucher code is not valid (anymore). Please buy a (new) voucher to access the chat.";
+		this.ClientCallMeNow = "Call me now";
+		this.ClientRequestInstantCallback = "Request Callback";
+		this.ClientRequestInstantCallbackInfo = "Welcome to our Instant Callback Service! Simply enter your contact details and we will call you back right away.";
+		this.ClientVoucherInUse = "This chat voucher is already in use. Please try again later.";
+		this.System = "System";
+		this.NextOperator = "The next available representative is reserved for you.";
+		this.InfoFieldText = "";
+		this.RepresentativeIsTyping = "<!--operator_name--> is typing ...";
+        this.ChatNotAvailable = "Sorry, our team is currently offline.";
+        this.Close = "Close";
+        this.Save = "Save";
+        this.ClientConnectingYou = "Trying to connect you ...";
+	}
+	
+	function lz_chat_data_templates()
+	{
+		this.MessageInternal = 'PHRhYmxlIGNsYXNzPSJsel9tZXNzYWdlIiBzdHlsZT0iaGVpZ2h0OjIwcHg7Ym9yZGVyLXJhZGl1czozcHg7YmFja2dyb3VuZDojNzNiZTI4OyI+CiAgICA8dHI+CiAgICAgICAgPHRkIHN0eWxlPSJ3aWR0aDo4cHg7Ij48L3RkPgogICAgICAgIDx0ZCBjbGFzcz0ibHpfbWVzc2FnZV9hX3RpdGxlIj48IS0tbmFtZS0tPjwvdGQ+CiAgICAgICAgPHRkIGNsYXNzPSJsel9tZXNzYWdlX2FfdGltZSI+PCEtLXRpbWUtLT48L3RkPgogICAgICAgIDx0ZCBzdHlsZT0id2lkdGg6MTBweDsiPjwvdGQ+CiAgICA8L3RyPgo8L3RhYmxlPgo8dGFibGUgY2xhc3M9Imx6X21lc3NhZ2UiPgogICAgPHRyPgogICAgICAgIDx0ZCBkaXI9IiIgY2xhc3M9Imx6X21lc3NhZ2VfdGV4dCI+CiAgICAgICAgICAgIDxkaXY+PCEtLW1lc3NhZ2UtLT48L2Rpdj4KICAgICAgICA8L3RkPgogICAgPC90cj4KPC90YWJsZT4=';
+		this.MessageExternal = 'PHRhYmxlIGNsYXNzPSJsel9tZXNzYWdlIiBzdHlsZT0iaGVpZ2h0OjIwcHg7Ym9yZGVyLXJhZGl1czozcHg7YmFja2dyb3VuZDojZWNlY2VjOyI+CiAgICA8dHI+CiAgICAgICAgPHRkIHN0eWxlPSJ3aWR0aDo4cHg7Ij48L3RkPgogICAgICAgIDx0ZCBjbGFzcz0ibHpfbWVzc2FnZV9iIj48IS0tbmFtZS0tPjwvdGQ+CiAgICAgICAgPHRkIGNsYXNzPSJsel9tZXNzYWdlX2IiIHN0eWxlPSJ0ZXh0LWFsaWduOnJpZ2h0OyI+PCEtLXRpbWUtLT48L3RkPgogICAgICAgIDx0ZCBzdHlsZT0id2lkdGg6MTBweDsiPjwvdGQ+CiAgICA8L3RyPgo8L3RhYmxlPgo8dGFibGUgY2xhc3M9Imx6X21lc3NhZ2UiPgogICAgPHRyPgogICAgICAgIDx0ZCBkaXI9IiIgY2xhc3M9Imx6X21lc3NhZ2VfdGV4dCI+CiAgICAgICAgICAgIDxkaXY+PCEtLW1lc3NhZ2UtLT48L2Rpdj4KICAgICAgICA8L3RkPgogICAgPC90cj4KPC90YWJsZT4=';
+		this.MessageAdd = 'PHRhYmxlIGNsYXNzPSJsel9tZXNzYWdlIj4KICAgIDx0cj4KICAgICAgICA8dGQgZGlyPSIiIGNsYXNzPSJsel9tZXNzYWdlX3RleHQiPgogICAgICAgICAgICA8ZGl2PjwhLS1tZXNzYWdlLS0+PC9kaXY+CiAgICAgICAgPC90ZD4KICAgIDwvdHI+CjwvdGFibGU+';
+		this.MessageAddAlt = 'PHRhYmxlIGNsYXNzPSJsel9tZXNzYWdlIiBzdHlsZT0iYmFja2dyb3VuZDojZmJmYmZiOyI+Cgk8dHI+CiAgICAgICAgPHRkIGRpcj0iIiBjbGFzcz0ibHpfbWVzc2FnZV90ZXh0Ij4KICAgICAgICAgICAgPGRpdj48IS0tbWVzc2FnZS0tPjwvZGl2PgogICAgICAgIDwvdGQ+Cgk8L3RyPgo8L3RhYmxlPg==';
+        this.CallMeBackIF = '<!--template_call_me_back-->';
+	}
+	
+	function lz_chat_internal_user()
+	{
+		this.Id = lz_global_base64_decode('');
+		this.Fullname = lz_global_base64_decode('');
+		this.Available = false;
+		this.ProfilePictureTime = 0;
+		this.Language = "en";
+	}
+	
+	function lz_chat_external_user()
+	{
+		this.Id = '';
+		this.Username = '';
+		this.Email = '';
+		this.Company = '';
+		this.Question = '';
+		this.Phone = '';
+		this.MailText = '';
+		this.Group = '';
+		this.Typing = false;
+		this.MessagesSent = new Array();
+		this.MessagesReceived = new Array();
+		this.Session;
+		this.TextAlign = 'left';
+	}
+}
+
+function lz_chat_post()
+{
+	this.MessageText = '';
+	this.MessageTranslation = '';
+	this.MessageId = '';
+	this.MessageTime = 0;
+	this.Received = false;
+}
+
+function lz_chat_com_chat_ticket()
+{
+	this.Id = "";
+	this.ChatTimeMax = 0;
+	this.ChatSessionsMax = 0;
+	this.ChatTime = 0;
+	this.ChatSessions = 0;
+    this.Expires = 0;
+    this.Expired = false;
+}
+
+function lz_chat_show_waiting_message()
+{
+	if(lz_chat_data.Status.Status != lz_chat_data.STATUS_ACTIVE && lz_chat_data.Status.Status != lz_chat_data.STATUS_CLOSED && lz_chat_data.Status.Status != lz_chat_data.STATUS_STOPPED && !lz_chat_data.WaitingMessageAppended)
+	{
+		if(!lz_chat_data.CallMeBackMode)
+			lz_chat_add_system_text(5,"");
+		lz_chat_data.WaitingMessageAppended = true;
+	}
+}
+
+function lz_chat_change_voucher_init()
+{
+	lz_chat_dialog(lz_chat_data.ComChatVoucherChangeHTML,lz_chat_get_frame_object(''),lz_chat_change_voucher_proceed,null,false);
+}
+
+function lz_chat_change_voucher_proceed()
+{
+	lz_chat_get_frame_object('lz_chat_dialog').style.display = 'none';
+	for (var v in lz_chat_data.ComChatVouchers)
+		for(var radio in lz_chat_get_frame_object('').getElementsByName("voucher_select"))
+			if(lz_chat_get_frame_object('').getElementsByName("voucher_select")[radio].checked)
+				if(lz_chat_data.ComChatVouchers[v].Id == lz_chat_get_frame_object('').getElementsByName("voucher_select")[radio].value)
+					lz_chat_data.ComChatVoucherActive = lz_chat_data.ComChatVouchers[v];
+}
+
+function lz_chat_set_signature(_userId)
+{			
+	lz_chat_data.ExternalUser.Session.UserId = _userId;
+	lz_chat_data.ExternalUser.Session.Save();
+}
+
+function lz_chat_buy_voucher_validate_form()
+{
+	var fields = {email:"email",firstname:"firstname",lastname:"lastname",address_1:"address_1",city:"city",zip:"zip"};
+	var missing = false;
+	for(fieldid in fields)
+	{
+		lz_chat_get_frame_object("lz_form_checkout_mandatory_" + fields[fieldid]).style.display = (lz_chat_get_frame_object('').getElementsByName("form_" + fields[fieldid])[0].value.length > 0) ? "none" : "";
+		if(lz_chat_get_frame_object('').getElementsByName("form_" + fields[fieldid])[0].value.length == 0)
+			missing = true;
+	}
+	lz_chat_get_frame_object("lz_form_checkout_mandatory_country").style.display = (lz_chat_get_frame_object('').getElementsByName("form_country")[0].selectedIndex > 0) ? "none" : "";
+	if(lz_chat_get_frame_object('').getElementsByName("form_country")[0].selectedIndex == 0)
+	{
+		missing = true;
+	}
+	
+	if(missing)
+		lz_chat_dialog(lz_chat_data.Language.FillMandatoryFields,lz_chat_get_frame_object(''),null,null,null,true);
+	return !missing;
+}
+
+function lz_chat_buy_voucher_proceed_to_payment()
+{
+	if(lz_chat_buy_voucher_validate_form())
+	{
+		lz_chat_get_frame_object('proceed_to_payment_button').disabled = true;
+		lz_chat_get_frame_object('checkout_form').submit();
+	}
+}
+
+function lz_chat_buy_voucher_calculate(_vat_amount,_currency,_priceFormatted,_priceUnformatted,_vouchertype)
+{
+	lz_chat_get_frame_object('vat_amount').innerHTML= "(" + _vat_amount + '&nbsp;' + _currency+")";
+	lz_chat_get_frame_object('total_amount').innerHTML = "<b>" + _priceFormatted + '</b>&nbsp;' + _currency + "&nbsp;&nbsp;";
+	lz_chat_get_frame_object('total_label').style.display = '';
+	lz_chat_get_frame_object('proceed_to_details_button').disabled = false;
+	lz_chat_get_frame_object('').getElementsByName('form_total_price')[0].value = _priceUnformatted;
+	lz_chat_get_frame_object('').getElementsByName('form_vat')[0].value = _vat_amount;
+	lz_chat_get_frame_object('').getElementsByName('form_currency')[0].value = _currency;
+	lz_chat_get_frame_object('').getElementsByName('form_voucher_type')[0].value = _vouchertype;
+	lz_chat_get_frame_object('').getElementsByName('form_group')[0].value = lz_chat_data.SelectedGroup.Id;
+	lz_chat_get_frame_object('').getElementsByName('form_visitor_id')[0].value = lz_chat_data.ExternalUser.Session.UserId;
+	lz_chat_get_frame_object('lz_chat_buy_voucher_tos').value = lz_global_base64_url_decode(lz_chat_get_frame_object('voucher_tos_' + _vouchertype).value);
+}
+
+function lz_chat_buy_voucher_navigate(_target,_reverse)
+{
+	if("" != "")
+	{
+		window.location = "";
+        window.moveTo(0,0)
+        window.resizeTo(screen.width,screen.height)
+		return;
+	}
+	lz_chat_get_frame_object('proceed_to_payment_button').disabled = false;
+	for(var i=0;i<lz_chat_get_frame_object('').getElementsByName("voucher_item").length;i++)
+	{
+		var found = false;
+		for(var x=0;x<lz_chat_data.SelectedGroup.ChatVouchersRequired.length;x++)
+			if(lz_chat_data.SelectedGroup.ChatVouchersRequired[x] == lz_chat_get_frame_object('').getElementsByName("voucher_item")[i].id)
+			{
+				found = true;
+				break;
+			}
+		lz_chat_get_frame_object('').getElementsByName("voucher_item")[i].style.display = (found) ? "" : "none";
+	}
+
+	if(_target == "cancel" && !lz_chat_data.CheckoutOnly)
+		_target = "start_chat";
+	else if(_target == "cancel")
+		_target = "voucher_select";
+
+	if(_target == "accept_tos" && lz_chat_get_frame_object('lz_chat_buy_voucher_tos').value.length==0)
+	{
+		if(_reverse)
+			_target = "voucher_select";
+		else
+			_target = "enter_details";
+	}
+
+	lz_chat_data.CheckoutActive = _target != "start_chat";
+
+	lz_chat_get_frame_object('lz_chat_extend_voucher_success').style.display = (_target == "voucher_extend_success") ? "" : "none";
+
+    lz_chat_get_frame_object('lz_input_header_box').style.display=
+	lz_chat_get_frame_object('lz_chat_login').style.display = (_target == "start_chat") ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_buy_voucher').style.display = (_target == "voucher_select") ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_checkout_details').style.display = (_target == "enter_details") ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_checkout_tos').style.display = (_target == "accept_tos") ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_checkout_cancel').style.display = (!lz_chat_data.CheckoutOnly) ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_com_voucher_pp').style.display = (_target == "start_chat") ? "none" : ((lz_chat_get_frame_object('lz_chat_com_voucher_pp').src.length > 0) ? "" : "none");
+}
+
+function lz_chat_initiate_forwarding(_group,_auto)
+{
+	if(lz_chat_data.QueueMessageAppended)
+	{
+		lz_chat_get_frame_object('lz_chat_queue_position').id = "oq_a" + lz_global_timestamp();
+		lz_chat_get_frame_object('lz_chat_queue_waiting_time').id = "oq_b" + lz_global_timestamp();
+		lz_chat_data.QueueMessageAppended = false
+	}
+
+    if(!_auto)
+    {
+	    lz_chat_data.ConnectedMessageAppended = false;
+    }
+
+	lz_chat_data.WaitingMessageAppended = false;
+	lz_chat_set_host('','','','',false,false,'',lz_chat_data.FeedbackPossible);
+	
+    if(!_auto)
+	    lz_chat_add_system_text(0,null);
+
+	lz_chat_set_intern_image(0,'',false);
+	lz_chat_set_group(_group);
+
+	lz_chat_set_status(lz_chat_data.STATUS_ALLOCATED);
+}
+
+function lz_chat_message(_translation,_original) 
+{
+	if(_original=='')
+		var msg = lz_chat_get_frame_object('lz_chat_text').value;
+	if(_original != '')
+		msg = _original;
+
+	if(lz_chat_data.Status.Status == lz_chat_data.STATUS_STOPPED)
+		return lz_chat_dialog(lz_chat_data.Language.RepresentativeLeft,null,null,null);
+	else if(msg.length > 0 && lz_global_trim(msg).length > 0 && msg.length <= lz_chat_data.MAXCHATLENGTH)
+	{
+		var sendmsg = true;
+
+		if(lz_chat_get_frame_object('lz_translation_service_active').checked && _original=='' && isNaN(msg))
+		{
+			var transfrom = lz_chat_get_frame_object('lz_chat_translation_target_language').options[lz_chat_get_frame_object('lz_chat_translation_target_language').selectedIndex].value;
+			var transinto = (lz_chat_data.TranslateInto!=null) ? lz_chat_data.TranslateInto : lz_chat_data.InternalUser.Language;
+            sendmsg = transfrom == transinto;
+			if(!sendmsg)
+			{
+				var newScript = document.createElement('script');
+				newScript.type = 'text/javascript';
+				var sourceText = encodeURI(msg);
+				window.doneTranslateCallback = function translateText(response){if(response.data!=null){lz_chat_message(response.data.translations[0].translatedText,msg);window.doneTranslateCallback=null;}else{lz_chat_dialog("Sorry, there was an error while trying to translate:<br><br>" + JSON.stringify(response),lz_chat_get_frame_object(''),null);lz_chat_get_frame_object('lz_translation_service_active').checked=false;lz_chat_message("",msg);}}
+				var source = "https://www.googleapis.com/language/translate/v2?key=&format=html&source="+transfrom+"&target="+transinto+"&callback=doneTranslateCallback&q=" + msg;
+				newScript.src = source;
+				lz_document_head.appendChild(newScript);
+			}
+		}
+		if(sendmsg)
+		{
+			var message = new lz_chat_post();
+			message.MessageText = msg;
+            if(_translation != null)
+			    message.MessageTranslation = _translation;
+			message.MessageId = lz_chat_data.MessageCount++;
+			lz_chat_data.ExternalUser.Typing = false;
+			lz_chat_data.ExternalUser.PreMessage = null;
+			lz_chat_add_extern_text(msg,_translation,true);
+			lz_chat_data.ExternalUser.MessagesSent[lz_chat_data.ExternalUser.MessagesSent.length] = message;
+			lz_chat_shout(10);
+		}
+	}
+	else if(msg.length > lz_chat_data.MAXCHATLENGTH)
+		return lz_chat_dialog(lz_chat_data.Language.MessageTooLong,null,null);
+
+	setTimeout("lz_chat_clear_field()",1);
+	return false;
+}
+
+function lz_chat_repost_from_queue(_post)
+{
+	if(!lz_chat_data.QueuePostsAdded)
+	{
+		var message = new lz_chat_post();
+		message.MessageText = lz_global_base64_url_decode(_post);
+		message.MessageId = lz_chat_data.MessageCount++;
+		lz_chat_add_extern_text("<i>" + lz_global_base64_url_decode(_post) + "</i>","",false);
+		lz_chat_data.ExternalUser.MessagesSent[lz_chat_data.ExternalUser.MessagesSent.length] = message;
+	}
+}
+
+function lz_chat_clear_field()
+{
+	lz_chat_get_frame_object('lz_chat_text').value = "";
+	lz_chat_focus_textbox();
+}
+
+function lz_chat_focus_textbox()
+{
+    document.getElementById("lz_chat_content").contentWindow.focus();
+	lz_chat_get_frame_object('lz_chat_text').focus();
+}
+
+function lz_chat_dialog(_text,_object,_event,_buttonText,_showIcon,_shadow,_size,_src,_print)
+{
+    if(lz_chat_get_frame_object('lz_chat_dialog').style.display != 'none')
+    {
+        if(lz_chat_get_frame_object('lz_chat_dialog_button').onmouseup)
+        {
+            return;
+        }
+        lz_chat_dialog_close();
+    }
+
+    if(!lz_chat_data.IsIOS)
+        lz_chat_get_frame_object('lz_chat_dialog_resource_frame').style.overflow = 'hidden';
+
+    lz_chat_get_frame_object('lz_chat_dialog_text').innerHTML = "";
+
+    if(_object != null)
+    {
+        if(_object != 'lz_chat_file_frame')
+        {
+            lz_chat_data.DialogObject = _object;
+            lz_chat_data.DialogObjectParent = _object.parentNode;
+            lz_chat_get_frame_object('lz_chat_dialog_text').appendChild(_object);
+        }
+        else
+        {
+            //lz_chat_get_frame_object('lz_chat_dialog_text_frame').style.display = "none";
+            lz_chat_get_frame_object('lz_chat_file_frame').style.display = "block";
+        }
+    }
+    else if(_text)
+        lz_chat_get_frame_object('lz_chat_dialog_text').innerHTML = _text;
+
+
+    lz_chat_get_frame_object('lz_chat_dialog_text_frame').style.display = ((_object == null && _src == null) || (_object != null && _object != 'lz_chat_file_frame')) ? 'block' : 'none';
+    lz_chat_get_frame_object('lz_chat_dialog_text').style.display = (_text || _object) ? '' : 'none';
+    lz_chat_get_frame_object('lz_chat_dialog_print').style.display = (_print) ? '' : 'none';
+    lz_chat_get_frame_object('lz_chat_dialog_resource_frame').style.display = (_src) ? '' : 'none';
+
+    lz_chat_get_frame_object('lz_chat_dialog_button').onclick = function(){lz_chat_dialog_close()};
+
+	if(_event == -1)
+        lz_chat_get_frame_object('lz_chat_dialog_button').disabled = true;
+	else if(_event != null)
+    {
+        lz_chat_get_frame_object('lz_chat_dialog_button').onclick = _event;
+        lz_chat_get_frame_object('lz_chat_dialog_button').onmouseup = function(){lz_chat_dialog_close()};
+    }
+
+	if(_buttonText != null)
+        lz_chat_get_frame_object('lz_chat_dialog_button').value = _buttonText;
+    else
+        lz_chat_get_frame_object('lz_chat_dialog_button').value = "Ok";
+
+    if(_src)
+    {
+        lz_chat_data.DialogSource = _src;
+        if(_size != null)
+        {
+            lz_chat_get_frame_object('lz_chat_dialog_resource_frame').style.height = parseInt(lz_global_get_window_height()*_size[0])+"px";
+            lz_chat_get_frame_object('lz_chat_dialog_resource_frame').style.width = parseInt(lz_global_get_window_width()*_size[1])+"px";
+        }
+        if(!lz_chat_data.FeedbackOnExit || !lz_chat_get_frame_object('lz_chat_dialog_resource').src.endsWith(lz_chat_data.DialogSource.replace("index-2.html","")))
+        {
+            lz_chat_get_frame_object('lz_chat_dialog_bg').style.cursor = "wait";
+            lz_chat_dialog_set_onload_event(lz_chat_get_frame_object('lz_chat_dialog_resource'),lz_chat_dialog_resource_loaded);
+            lz_chat_get_frame_object('lz_chat_dialog_resource').src = lz_chat_data.DialogSource;
+        }
+        else
+            lz_chat_get_frame_object('lz_chat_dialog').style.display = 'inline-block';
+    }
+    else
+        lz_chat_get_frame_object('lz_chat_dialog').style.display = 'inline-block';
+
+    lz_chat_get_frame_object('lz_chat_dialog_bg').style.display = 'block';
+}
+
+function lz_chat_dialog_close()
+{
+    lz_chat_get_frame_object('lz_chat_file_frame').style.display = "none";
+    lz_chat_get_frame_object('lz_chat_dialog_text_frame').style.display = "block";
+    if(lz_chat_data.DialogObject != null)
+    {
+        lz_chat_data.DialogObjectParent.appendChild(lz_chat_data.DialogObject);
+        lz_chat_data.DialogObject = lz_chat_data.DialogParentObject = null;
+    }
+    lz_chat_get_frame_object('lz_chat_dialog_bg').style.display = 'none';
+    lz_chat_get_frame_object('lz_chat_dialog').style.display = 'none';
+
+    if(lz_chat_data.FeedbackOnExit && lz_chat_data.DialogSource && lz_chat_data.DialogSource != lz_chat_data.FeedbackURL)
+    {
+        lz_chat_dialog_set_onload_event(lz_chat_get_frame_object('lz_chat_dialog_resource'),new function(){});
+        lz_chat_get_frame_object('lz_chat_dialog_resource').src = lz_chat_data.DialogSource = lz_chat_data.FeedbackURL;
+    }
+    else
+        lz_chat_data.DialogSource = null;
+}
+
+function lz_chat_dialog_set_onload_event(_iframe,_function)
+{
+    _iframe.onload = _function;
+}
+
+function lz_chat_dialog_resource_loaded()
+{
+    lz_chat_get_frame_object('lz_chat_dialog_bg').style.cursor = "auto";
+    lz_chat_get_frame_object('lz_chat_dialog').style.display = 'inline-block';
+}
+
+function lz_chat_take_smiley(_smiley)
+{
+	var sign = "";
+	switch(_smiley)
+	{
+		case"smile":sign = ":-)";break;
+		case"sad":sign = ":-(";break;
+		case"neutral":sign = ":-|";break;
+		case"tongue":sign = ":-P";break;
+		case"cry":sign = ":'-(";break;
+		case"lol":sign = ":-]";break;
+		case"shocked":sign = ":-O";break;
+		case"wink":sign = ";-)";break;
+		case"cool":sign = "8-)";break;
+		case"sick":sign = ":-\\\\";break;
+		case"question":sign = ":?";break;
+		case"sleep":sign = "zzZZ";break;
+	}
+	lz_chat_switch_emoticons();
+	lz_chat_get_frame_object('lz_chat_text').value += sign;
+	lz_chat_focus_textbox();
+
+    lz_chat_get_frame_object('lz_chat_emoticons_container').appendChild(lz_chat_get_frame_object('lz_chat_emoticons_frame'));
+    lz_chat_get_frame_object('lz_chat_dialog_bg').style.display = 'none';
+    lz_chat_get_frame_object('lz_chat_dialog').style.display = 'none';
+}
+
+function lz_chat_call_back_info(_html)
+{
+    lz_chat_get_frame_object('lz_chat_call_me_back_st').innerHTML = lz_global_base64_decode(_html);
+    lz_chat_get_frame_object('lz_chat_call_me_back_wa').innerHTML = '';
+}
+
+function lz_chat_clear_room_members(_id,_leftDynamicGroup)
+{
+    if((lz_chat_data.InternalUser.Available && _id.length == 0) || _id.length > 0)
+    {
+        for(var i=0;i<lz_chat_data.MembersPrevious.length;i++)
+        {
+            if(lz_array_indexOf(lz_chat_data.Members,lz_chat_data.MembersPrevious[i]) == -1)
+            {
+                var node = lz_chat_get_frame_object("").getElementById('rm_' + lz_chat_data.MembersPrevious[i]);
+                if(!_leftDynamicGroup && lz_chat_data.DynamicGroup != '')
+                    lz_chat_add_system_text(10,lz_global_base64_encode(node.innerHTML));
+                lz_chat_get_frame_object('lz_chat_members_box').removeChild(node);
+            }
+        }
+        lz_chat_data.MembersPrevious = lz_chat_data.Members;
+        lz_chat_data.Members = new Array();
+    }
+}
+
+function lz_chat_set_room_member(_id,_fullname,_isOperator,_isBusyAway,_inDynamicGroup)
+{
+    _id = lz_global_base64_decode(_id);
+
+    if((lz_chat_data.InternalUser != null && lz_chat_data.InternalUser.Id != "") || !_inDynamicGroup)
+        if(lz_array_indexOf(lz_chat_data.MembersPrevious,_id) == -1 && lz_array_indexOf(lz_chat_data.Members,_id) == -1)
+        {
+            if(!_inDynamicGroup || lz_chat_data.DynamicGroup != '')
+                lz_chat_add_system_text(1,_fullname);
+        }
+
+    if(lz_array_indexOf(lz_chat_data.Members,_id) == -1)
+    {
+        lz_chat_data.Members[lz_chat_data.Members.length] = _id;
+        if(!lz_chat_get_frame_object("").getElementById('rm_' + _id))
+        {
+            var me = document.createElement('div');
+            me.innerHTML = lz_global_base64_decode(_fullname);
+            me.id = 'rm_' + _id;
+            me.className = 'lz_chat_members_back_item ' + ((!_isOperator) ? 'lz_chat_members_back_external' : 'lz_chat_members_back_internal');
+            lz_chat_get_frame_object('lz_chat_members_box').appendChild(me);
+        }
+    }
+
+    if(lz_chat_get_frame_object("").getElementById('rm_' + _id))
+    {
+        if(lz_chat_get_frame_object("").getElementById('rm_' + _id).innerHTML != lz_global_base64_decode(_fullname))
+            lz_chat_get_frame_object("").getElementById('rm_' + _id).innerHTML = lz_global_base64_decode(_fullname);
+
+        lz_chat_get_frame_object("").getElementById('rm_' + _id).style.fontStyle = (_isBusyAway) ? 'italic' : 'normal';
+    }
+
+    if(lz_chat_data.Members.length > 2 || lz_chat_data.DynamicGroup != '')
+    {
+        lz_chat_get_frame_object('lz_chat_members_box').style.display = 'block';
+        lz_chat_get_frame_object('lz_chat_main').style.right = "137px";
+    }
+}
+
+function lz_chat_set_host(_id,_fullname,_groupname,_language,_typing,_vcard,_dygroup,_feedback)
+{
+	if(_id.length > 0)
+	{
+		lz_chat_data.InternalUser.Id = (lz_global_base64_decode(_id));
+		lz_chat_data.InternalUser.Fullname = (_fullname.length > 0) ? (lz_global_base64_decode(_fullname)) : lz_chat_data.InternalUser.Id;
+		lz_chat_data.InternalUser.Language = _language;
+        lz_chat_get_frame_object('lz_chat_operator_fullname').innerHTML = lz_chat_data.InternalUser.Fullname;
+        lz_chat_get_frame_object('lz_chat_operator_groupname').innerHTML = (lz_global_base64_decode(_groupname));
+        lz_chat_get_frame_object('lz_chat_vcard_text').href = "visitcardcb95.html?intid=" + encodeURIComponent(lz_chat_data.InternalUser.Id);
+		lz_chat_get_frame_object('lz_chat_operator_typing_info').innerHTML = lz_chat_data.Language.RepresentativeIsTyping.replace("<!--operator_name-->",lz_chat_data.InternalUser.Fullname);
+	}
+
+	if(lz_global_base64_decode(_dygroup) == '' && _dygroup != lz_chat_data.DynamicGroup && lz_chat_data.DynamicGroup != '')
+	{
+        lz_chat_add_system_text(12,lz_chat_data.DynamicGroup);
+		lz_chat_data.DynamicGroup = '';
+	}
+
+    var leftDynamicGroup = false;
+	if(_dygroup != '' && _dygroup != lz_chat_data.DynamicGroup)
+	{
+        lz_chat_data.FeedbackPossible = false;
+		lz_chat_add_system_text(11,_dygroup);
+		lz_chat_data.DynamicGroup = _dygroup;
+        leftDynamicGroup = true;
+	}
+
+    lz_chat_clear_room_members(_id, leftDynamicGroup);
+	lz_chat_data.InternalUser.Available = (_id.length > 0);
+	lz_chat_get_frame_object('lz_chat_subline').style.display = (_id.length > 0 && _typing) ? "block" : "none";
+
+    if(!_feedback)
+        lz_chat_data.FeedbackPossible =_feedback;
+
+    var showHeader = lz_chat_show_header();
+    lz_chat_get_frame_object('lz_chat_vcard_box').style.display = (_id.length > 0 && _vcard) ? "" : "none";
+    lz_chat_get_frame_object('lz_chat_logo').style.visibility = (!showHeader && _id.length > 0 && lz_chat_data.ShowOperatorInfoBox) ? "hidden" : "visible";
+    lz_chat_get_frame_object('lz_chat_top_bg').style.visibility = (showHeader && (_id.length == 0 || !lz_chat_data.ShowOperatorInfoBox)) ? "visible" : "hidden";
+    lz_chat_get_frame_object('lz_chat_feedback_init').style.visibility = (lz_chat_data.FeedbackPossible && _id.length > 0 && lz_chat_data.ShowOperatorInfoBox) ? "visible" : "hidden";
+    lz_chat_get_frame_object('lz_chat_representative').style.visibility = (_id.length > 0 && lz_chat_data.ShowOperatorInfoBox) ? "visible" : "hidden";
+}
+
+function lz_chat_set_intern_image(_edited,_file,_filtered)
+{
+	if(_edited == 0 || _filtered)
+	{
+		lz_chat_data.TempImage.src = "images/avatar.png";
+	}
+	else if(_edited != lz_chat_data.InternalUser.ProfilePictureTime)
+	{
+		lz_chat_data.TempImage.src = "./" + _file;
+		lz_chat_data.InternalUser.ProfilePictureTime = _edited;
+	}
+}
+
+function lz_chat_show_intern_image()
+{
+    lz_chat_get_frame_object('lz_chat_intern_image').style.backgroundImage = "url("+lz_chat_data.TempImage.src+")";
+}
+
+function lz_chat_switch_extern_typing(_typing)
+{	
+	var announce = (_typing != lz_chat_data.ExternalUser.Typing);
+	if(_typing)
+	{
+		if(lz_chat_data.TimerTyping != null)
+			clearTimeout(lz_chat_data.TimerTyping);
+		lz_chat_data.TimerTyping = setTimeout("lz_chat_switch_extern_typing(false);",5000);
+		lz_switch_title_mode(false);
+	}
+	
+	lz_chat_data.ExternalUser.Typing = _typing;
+	lz_chat_data.ExternalUser.PreMessage = lz_chat_get_frame_object('lz_chat_text').value;
+	
+	if(announce)
+		lz_chat_shout(11);
+}
+
+function lz_chat_show_connected(_group)
+{
+	if(!lz_chat_data.ConnectedMessageAppended)
+	{
+		lz_chat_data.ConnectedMessageAppended = true;
+        if(!_group)
+		    lz_chat_add_system_text(6,null);
+	}
+}
+
+function lz_chat_show_queue_position(_position,_time,_html)
+{
+	if(!lz_chat_data.QueueMessageAppended)
+	{
+		var qmessage = lz_global_base64_decode(_html).replace("<!--queue_position-->","<span id='lz_chat_queue_position'>-1</span>");
+		qmessage = qmessage.replace("<!--queue_waiting_time-->","<span id='lz_chat_queue_waiting_time'>-1</span>");
+		lz_chat_add_system_text(-1,qmessage);
+		lz_chat_data.QueueMessageAppended = true;
+	}
+	
+	var cposition = parseInt(lz_chat_get_frame_object('lz_chat_queue_position').innerHTML);
+	var cwtime = parseInt(lz_chat_get_frame_object('lz_chat_queue_waiting_time').innerHTML);
+	
+	if(_position == 1 && (cposition != _position))
+		lz_chat_add_system_text(9,"");
+		
+	if(cposition == -1 || (_position > 0 && _position <= cposition))
+		lz_chat_get_frame_object('lz_chat_queue_position').innerHTML = _position;
+		
+	if(cwtime == -1 || (_time > 0 && _time <= cwtime))
+		lz_chat_get_frame_object('lz_chat_queue_waiting_time').innerHTML = _time;
+}
+
+function lz_chat_add_system_text(_type,_texta) 
+{	
+	var text = "";
+	if(_type == 0)
+		text = lz_chat_data.Language.ClientForwarding;
+	else if(_type == 1)
+		text = lz_chat_data.Language.ClientInternArrives.replace("<!--intern_name-->",(lz_global_base64_decode(_texta)));
+	else if(_type == 2)
+		text = lz_chat_data.Language.ClientErrorUnavailable + (lz_global_base64_decode(_texta));
+	else if(_type == 3)
+		text = lz_chat_data.Language.ClientIntLeft + " <a href=\"javascript:parent.lz_chat_goto_message(true,false);\"><b>" + lz_chat_data.Language.LanguageLeaveMessageShort + "</b></a>. " + lz_chat_data.Language.ClientThankYou;
+	else if(_type == 4)
+		text = lz_chat_data.Language.ClientIntDeclined + " <a href=\"javascript:parent.lz_chat_goto_message(true,false);\"><b>" + lz_chat_data.Language.LanguageLeaveMessageShort + "</b></a>. " + lz_chat_data.Language.ClientThankYou;
+	else if(_type == 5)
+		text = lz_chat_data.Language.ClientStillWaitingInt + " <a href=\"javascript:parent.lz_chat_goto_message(true,false);\"><b>" + lz_chat_data.Language.LanguageLeaveMessageShort + "</b></a>. " + lz_chat_data.Language.ClientThankYou;
+	else if(_type == 6)
+		text = lz_chat_data.Language.ClientIntIsConnected;
+	else if(_type == 8)
+		text = lz_chat_data.Language.ClientNoInternUsers + " <a href=\"javascript:parent.lz_chat_goto_message(true,false);\"><b>" + lz_chat_data.Language.LanguageLeaveMessageShort + "</b></a>. " + lz_chat_data.Language.ClientThankYou;
+	else if(_type == 9)
+		text = lz_chat_data.Language.NextOperator;
+	else if(_type == 10)
+		text = lz_chat_data.Language.ClientInternLeft.replace("<!--intern_name-->",(lz_global_base64_decode(_texta)));
+	else if(_type == 11)
+		text = lz_chat_data.Language.JoinGroup.replace("<!--group_name-->",(lz_global_base64_decode(_texta)));
+	else if(_type == 12)
+		text = lz_chat_data.Language.LeaveGroup.replace("<!--group_name-->",(lz_global_base64_decode(_texta)));
+    else if(_type == 13)
+        text = lz_chat_data.Language.ClientConnectingYou;
+	else if(_type == 99)
+		text = lz_global_base64_decode(_texta);
+	else
+		text = _texta;
+		
+	text = lz_global_replace_smilies(text,true);
+
+	if(lz_chat_data.LastSender != lz_chat_data.SYSTEM)
+	{
+		text = lz_global_base64_decode(lz_chat_data.Templates.MessageExternal).replace("<!--message-->",text);
+		lz_chat_data.AlternateRow = true;
+	}
+	else
+	{
+		if(lz_chat_data.AlternateRow)
+			text = lz_global_base64_decode(lz_chat_data.Templates.MessageAddAlt).replace("<!--message-->",text);
+		else
+			text = lz_global_base64_decode(lz_chat_data.Templates.MessageAdd).replace("<!--message-->",text);
+		lz_chat_data.AlternateRow = !lz_chat_data.AlternateRow;
+	}
+	text = text.replace("<!--time-->",lz_chat_get_locale_time());
+	text = text.replace("<!--name-->",lz_chat_data.Language.System);
+    text = text.replace("<!--align-->","left");
+	lz_chat_append_text(text);
+	lz_chat_data.LastSender = lz_chat_data.SYSTEM;
+}
+
+function lz_chat_add_internal_text(_text,_acid,_internalName,_repost) 
+{
+	_text = lz_global_base64_decode(_text);
+	_acid = lz_global_base64_decode(_acid);
+
+	var message = new lz_chat_post();
+	var template = (_repost) ? lz_chat_data.Templates.MessageExternal : lz_chat_data.Templates.MessageInternal;
+	message.MessageId = _acid;
+	message.MessageText = _text;
+	message.MessageTime = lz_global_timestamp();
+
+	if(!lz_chat_message_is_received(message))
+	{
+        lz_chat_data.MessageCountReceived++;
+
+        if(!lz_chat_data.ChatActive && lz_chat_data.MessageCountReceived>=1)
+            lz_chat_activate();
+
+        if(_repost)
+            _text = "<i>" + _text + "</i>";
+
+        if(lz_chat_data.LastSender != lz_chat_data.INTERNAL+_internalName)
+        {
+            _text = lz_global_base64_decode(template).replace("<!--message-->",_text);
+            lz_chat_data.AlternateRow = true;
+        }
+        else
+        {
+            if(lz_chat_data.AlternateRow)
+                _text = lz_global_base64_decode(lz_chat_data.Templates.MessageAddAlt).replace("<!--message-->",_text);
+            else
+                _text = lz_global_base64_decode(lz_chat_data.Templates.MessageAdd).replace("<!--message-->",_text);
+            lz_chat_data.AlternateRow = !lz_chat_data.AlternateRow;
+        }
+
+		if(!_repost)
+			_text = _text.replace("<!--time-->",lz_chat_get_locale_time());
+		else
+			_text = _text.replace("<!--time-->","");
+			
+		_text = _text.replace("<!--name-->",lz_global_base64_decode(_internalName));
+		_text = lz_global_replace_smilies(_text,true);
+        _text = _text.replace("<!--align-->","right");
+		lz_switch_title_mode(true);
+		lz_chat_append_text(_text);
+		
+		if(lz_chat_data.LastSound < (lz_global_timestamp()-1))
+		{
+			lz_chat_data.LastSound = lz_global_timestamp();
+            if(lz_chat_get_frame_object('lz_chat_sound_button').style.display != 'none')
+                lz_chat_play_sound();
+		}
+		lz_chat_data.LastSender = lz_chat_data.INTERNAL+_internalName;
+	}
+}
+
+function lz_chat_message_is_received(_message)
+{
+	for(var mIndex in lz_chat_data.ExternalUser.MessagesReceived)
+		if(lz_chat_data.ExternalUser.MessagesReceived[mIndex].MessageId == _message.MessageId)
+			return true;
+			
+	lz_chat_data.ExternalUser.MessagesReceived[lz_chat_data.ExternalUser.MessagesReceived.length] = _message;
+	lz_chat_shout(12);
+	
+	var mNewMessages = new Array();
+	for(var mIndex in lz_chat_data.ExternalUser.MessagesReceived)
+		if(lz_chat_data.ExternalUser.MessagesReceived[mIndex].MessageTime >= (lz_global_timestamp()-3600))
+			mNewMessages[mNewMessages.length] = lz_chat_data.ExternalUser.MessagesReceived[mIndex];
+
+	lz_chat_data.ExternalUser.MessagesReceived = mNewMessages;
+	return false;
+}
+
+function lz_chat_message_set_received(_id)
+{
+	for(var mIndex in lz_chat_data.ExternalUser.MessagesReceived)
+		if(lz_chat_data.ExternalUser.MessagesReceived[mIndex].MessageId == _id)
+			return (lz_chat_data.ExternalUser.MessagesReceived[mIndex].Received = true);
+	return true;
+}
+
+function lz_chat_set_id(_id)
+{
+	lz_chat_data.Id = _id;
+	return true;
+}
+
+function lz_chat_add_extern_text(_text,_translation,_escape) 
+{
+	if(_escape)
+		_text = lz_global_htmlentities(_text);
+	_text = lz_global_replace_breaks(_text);
+
+	if(_translation != '')
+	{
+		_translation = lz_global_htmlentities(_translation);
+		_translation = lz_global_replace_breaks(_translation);
+		_text = _translation + "<div class=\"lz_message_translation\">"+_text+"</div>";
+	}
+	
+	if(lz_chat_data.LastSender != lz_chat_data.EXTERNAL)
+	{
+		_text = lz_global_base64_decode(lz_chat_data.Templates.MessageExternal).replace("<!--message-->",_text);
+		lz_chat_data.AlternateRow = true;
+	}
+	else
+	{
+		if(lz_chat_data.AlternateRow)
+			_text = lz_global_base64_decode(lz_chat_data.Templates.MessageAddAlt).replace("<!--message-->",_text);
+		else
+			_text = lz_global_base64_decode(lz_chat_data.Templates.MessageAdd).replace("<!--message-->",_text);
+		lz_chat_data.AlternateRow = !lz_chat_data.AlternateRow;
+	}
+	_text = lz_global_replace_smilies(_text,true);
+	_text = _text.replace("<!--time-->",lz_chat_get_locale_time());
+    _text = _text.replace("<!--align-->","left");
+	_text = _text.replace("<!--name-->",lz_global_htmlentities(lz_chat_data.ExternalUser.Username));
+	_text = _text.replace("<!--align-->",lz_chat_data.ExternalUser.TextAlign);
+	lz_chat_append_text(_text);
+	lz_chat_data.LastSender = lz_chat_data.EXTERNAL;
+}
+
+function lz_chat_append_text(_html)
+{
+	window.focus();
+	if(!lz_chat_data.Status.Loaded)
+		return;
+
+	var newMessage = lz_chat_get_frame_object('').createElement("DIV");
+
+	newMessage.innerHTML = _html;
+	lz_chat_get_frame_object('lz_chat_main').appendChild(newMessage);
+
+    var links = newMessage.getElementsByTagName("a");
+    if(links.length > 0)
+        for (link in links)
+            if(links[link].target=="" && links[link].href.indexOf("javascript") == -1)
+                links[link].target = "_blank";
+
+    lz_chat_scroll_down();
+
+	if(lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+		lz_chat_focus_textbox();
+}
+
+function lz_chat_scroll_down()
+{
+    lz_chat_get_frame_object('lz_chat_main').scrollTop = lz_chat_get_frame_object('lz_chat_main').scrollHeight;
+}
+
+function lz_chat_print() 
+{
+    var pURL = "print354c.html?c=" + lz_global_base64_url_encode(lz_chat_data.Id) + "&b=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.Session.BrowserId) + "&i=" + lz_global_base64_url_encode(lz_chat_data.ExternalUser.Session.UserId) + "&r=" + Math.random().toString();
+    lz_chat_dialog(null,null,null,lz_chat_data.Language.Close,null,true,new Array(0.82,0.94),pURL,true);
+}
+
+function lz_chat_release_post(_id)
+{	
+	if(lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+	{
+		newMessageList = new Array();
+		for (var mIndex in lz_chat_data.ExternalUser.MessagesSent)
+			if(lz_chat_data.ExternalUser.MessagesSent[mIndex].MessageId != _id)
+				newMessageList[newMessageList.length] = lz_chat_data.ExternalUser.MessagesSent[mIndex];
+		lz_chat_data.ExternalUser.MessagesSent = newMessageList;
+	}
+}
+
+function lz_chat_change_window_state(_minimized)
+{
+	lz_switch_title_mode(_minimized);
+}
+
+function lz_chat_update_com_chat_data(_timer)
+{
+	if(lz_chat_data.Status.Status == lz_chat_data.STATUS_ACTIVE)
+	{
+		lz_chat_data.ComChatVoucherActive.ChatTime++;
+		if(_timer)
+			lz_chat_data.ComChatSessionTimer = setTimeout("lz_chat_update_com_chat_data(true);",1000);
+	}
+
+	if(lz_chat_data.ComChatVoucherActive.ChatTimeMax > 0)
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_length_value').innerHTML = lz_format_time_span(lz_chat_data.ComChatVoucherActive.ChatTimeMax - lz_chat_data.ComChatVoucherActive.ChatTime);
+	else
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_length_value').innerHTML = lz_format_time_span(lz_chat_data.ComChatVoucherActive.ChatTime);
+	
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_amount_value').innerHTML = lz_chat_data.ComChatVoucherActive.ChatSessions + ((lz_chat_data.ComChatVoucherActive.ChatSessionsMax == -1) ? "" : " / " + lz_chat_data.ComChatVoucherActive.ChatSessionsMax);
+	
+	var date = new Date(lz_chat_data.ComChatVoucherActive.Expires*1000);
+	
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_period_value').innerHTML = date.toLocaleDateString();
+	
+	if(lz_chat_data.ComChatVoucherActive.ChatSessionsMax > -1 && lz_chat_data.ComChatVoucherActive.ChatSessionsMax <= lz_chat_data.ComChatVoucherActive.ChatSessions)
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_amount_value').className = 'lz_chat_com_chat_panel_value_over';
+	else
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_amount_value').className = 'lz_chat_com_chat_panel_value';
+		
+	if(lz_chat_data.ComChatVoucherActive.ChatTime >= lz_chat_data.ComChatVoucherActive.ChatTimeMax && lz_chat_data.ComChatVoucherActive.ChatTimeMax > -1)
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_length_value').className = 'lz_chat_com_chat_panel_value_over';
+	else
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_length_value').className = 'lz_chat_com_chat_panel_value';
+		
+	if(lz_chat_data.ComChatVoucherActive.Expired)
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_period_value').className = 'lz_chat_com_chat_panel_value_over';
+	else
+		lz_chat_get_frame_object('lz_chat_com_chat_chat_period_value').className = 'lz_chat_com_chat_panel_value';
+		
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_amount_value').style.display =
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_amount_caption').style.display = (lz_chat_data.ComChatVoucherActive.ChatSessionsMax > -1) ? "" : "none";
+		
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_length_value').style.display =
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_length_caption').style.display = (lz_chat_data.ComChatVoucherActive.ChatTimeMax > -1) ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_length_spacer').style.display = (lz_chat_data.ComChatVoucherActive.ChatSessionsMax > -1 && lz_chat_data.ComChatVoucherActive.ChatTimeMax > -1) ? "" : "none";
+
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_period_spacer').style.display = (lz_chat_data.ComChatVoucherActive.Expires > 0 && (lz_chat_data.ComChatVoucherActive.ChatSessionsMax > -1 || lz_chat_data.ComChatVoucherActive.ChatTimeMax > -1)) ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_period_caption').style.display =
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_period_value').style.display = (lz_chat_data.ComChatVoucherActive.Expires > 0) ? "" : "none";
+
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_voucher_id').style.display = (lz_chat_data.ComChatVoucherActive.Expires == -1 && lz_chat_data.ComChatVoucherActive.ChatSessionsMax == -1 && lz_chat_data.ComChatVoucherActive.ChatTimeMax == -1) ? "" : "none";
+	lz_chat_get_frame_object('lz_chat_com_chat_chat_voucher_id').innerHTML = lz_chat_data.ComChatVoucherActive.Id;
+}
+
+function lz_chat_set_status(_status)
+{	
+	if(_status == lz_chat_data.STATUS_ACTIVE)
+	{
+		var buttons = {sm:"SM",so:"SO",pr:"PR",fu:"FU",tr:"TR",et:"ET"};
+		if(lz_chat_data.ChatActive)
+            for(buttinid in buttons)
+                lz_chat_get_frame_object('lz_cf_' + buttinid).style.display = lz_chat_get_frame_object('lz_cf_value_' + buttinid).value;
+		if(lz_chat_data.TimerWaiting != null)
+			clearTimeout(lz_chat_data.TimerWaiting);
+		if(lz_chat_data.Status.Status != _status && lz_chat_data.ComChatVoucherActive != null)
+			lz_chat_data.ComChatSessionTimer = setTimeout("lz_chat_update_com_chat_data(true);",1000);
+	}
+	else if(_status == lz_chat_data.STATUS_INIT && lz_chat_data.TimerWaiting == null && true)
+		lz_chat_data.TimerWaiting = setTimeout("lz_chat_show_waiting_message();",90*1000);
+	if(lz_chat_data.Status.Status < lz_chat_data.STATUS_STOPPED)
+		lz_chat_data.Status.Status = _status;
+
+    if(_status == lz_chat_data.STATUS_ACTIVE)
+    {
+        lz_chat_data.FeedbackURL = "feedback689f.html?cid=" + lz_global_base64_url_encode(lz_chat_data.Id);
+        if(lz_chat_data.FeedbackOnExit)
+            lz_chat_get_frame_object('lz_chat_dialog_resource').src = lz_chat_data.FeedbackURL;
+        lz_chat_get_frame_object('lz_chat_callback_feedback').disabled=false;
+        lz_chat_get_frame_object('lz_chat_callback_feedback').className='lz_form_button';
+    }
+}
+
+function lz_chat_handle_response(_status, _response)
+{
+	lz_chat_data.LastConnectionFailed = false;
+	lz_chat_data.ConnectionRunning = false;
+	lz_chat_process_xml(_response);
+}
+
+function lz_chat_handle_shout_response(_status, _response)
+{
+	lz_chat_process_xml(_response);
+	setTimeout("lz_chat_reshout()",lz_chat_data.ChatFrequency * 1000);
+}
+
+function lz_chat_process_xml(_xml)
+{
+	try
+	{
+		if(_xml.length > 0 && _xml.indexOf("<livezilla_js>") != -1)
+		{
+			lz_chat_data.LastConnection = lz_global_timestamp();
+			var lzTstart = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><livezilla_js>";
+			var lzTend = "</livezilla_js>";
+			eval(lz_global_base64_decode(_xml.substr(_xml.indexOf(lzTstart) + lzTstart.length,_xml.indexOf(lzTend)-_xml.indexOf(lzTstart)-lzTstart.length)));
+		}
+		else if(lz_chat_data.Status.Status < lz_chat_data.STATUS_INIT)
+			setTimeout("lz_chat_handle_connection_error(null,null);",2000);
+	}
+	catch(ex)
+    {
+        if(lz_chat_data.Debug)
+            alert(ex);
+    }
+}
+
+function lz_chat_handle_connection_error(_status, _response)
+{
+	lz_chat_data.ShoutNeeded = true;
+	lz_chat_data.ConnectionRunning = 
+	lz_chat_data.ShoutRunning = false;
+	lz_chat_data.LastConnectionFailed = true;
+	if(lz_chat_data.Status.Status < lz_chat_data.STATUS_INIT)
+		setTimeout("lz_chat_reload_groups();",5000);
+}
+
+function lz_chat_feedback_result()
+{
+    lz_chat_data.FeedbackOnExit = false;
+}
+
+function lz_chat_show_feedback(_showError)
+{
+    if(lz_chat_data.FeedbackPossible)
+    {
+        lz_chat_switch_options(true);
+        lz_chat_dialog(null,null,null,lz_chat_data.Language.Close,null,true,new Array(0.80,0.94),lz_chat_data.FeedbackURL);
+    }
+    return true;
+}
+function lz_chat_release_frame(_name)
+{
+    lz_chat_data.PermittedFrames--;
+    if(lz_chat_data.PermittedFrames==-1)
+    {
+		lz_chat_close();
+    }
+	if(lz_chat_data.PermittedFrames == 0 && lz_chat_data.Status.Status == lz_chat_data.STATUS_START)
+	{
+		lz_chat_set_parentid();
+		if(!lz_chat_data.SetupError)
+		{
+			if(lz_geo_resolution_needed && lz_chat_data.ExternalUser.Session.GeoResolved.length != 7)
+				lz_chat_geo_resolute();
+			else
+			{
+				lz_chat_data.GeoResolution.SetStatus(7);
+				setTimeout("lz_chat_startup();",200);
+			}
+		}
+		else
+		{
+			lz_chat_release(false,lz_chat_data.SetupError);
+		}
+		
+	}
+	else if(lz_chat_data.PermittedFrames == 0 && lz_chat_data.Status.Status == lz_chat_data.STATUS_INIT)
+		lz_chat_loaded();
+}
+
+function lz_chat_switch_com_chat_box(_visible)
+{
+    lz_chat_get_frame_object('lz_chat_com_frame').style.visibility = (_visible) ? 'visible' : 'hidden';
+}
+
+function lz_chat_switch_file_upload()
+{
+    lz_chat_dialog(null,'lz_chat_file_frame',null,lz_chat_data.Language.Close,null,true);
+    if(lz_chat_get_frame_object('lz_chat_file_upload_frame').src == "")
+        lz_chat_get_frame_object('lz_chat_file_upload_frame').src = "upload689f.html?cid="+ lz_global_base64_url_encode(lz_chat_data.Id);
+}
+
+function lz_chat_switch_emoticons()
+{
+    lz_chat_dialog(null,lz_chat_get_frame_object('lz_chat_emoticons_frame'),null,lz_chat_data.Language.Close,null,true);
+}
+
+function lz_chat_switch_auto_translate()
+{
+    lz_chat_dialog(null,lz_chat_get_frame_object('lz_chat_auto_translate_frame'),null,lz_chat_data.Language.Save,null,true);
+}
+
+function lz_chat_switch_transcript()
+{
+    lz_chat_dialog(null,lz_chat_get_frame_object('lz_chat_transcript_frame'),null,lz_chat_data.Language.Save,null,true);
+}
+
+function lz_chat_switch_options(_forceClose)
+{
+    lz_chat_get_frame_object('lz_chat_options_table').style.display = (lz_chat_get_frame_object('lz_chat_options_table').style.display=='none' && !_forceClose) ? '' : 'none';
+}
+
+function lz_chat_is_dropdown_open()
+{
+    var mainTop = lz_chat_get_frame_object('lz_chat_main').style.top.toString().replace("px",'');
+    return (mainTop != "0" && mainTop != "");
+}
+
+function lz_chat_get_frame_object(_id)
+{
+    var innerDoc = document.getElementById("lz_chat_content").contentDocument || document.getElementById("lz_chat_content").contentWindow.document;
+    if(_id == "")
+        return innerDoc;
+    else
+        return innerDoc.getElementById(_id);
+}
+
+function lz_chat_change_url(_url,_parent)
+{
+    if(_parent && window.opener != null && !window.opener.closed)
+    {
+        window.opener.location =_url;
+        window.close();
+    }
+    else
+    {
+	    lz_chat_remove_from_parent();
+	    lz_chat_data.WindowNavigating = true;
+	    window.location.href = _url;
+    }
+}
+
+function lz_chat_show_header()
+{
+    var width = lz_global_get_window_width();
+    var height = lz_global_get_window_height();
+    var hideHeader = width < 250 || lz_chat_data.IsSmall || !lz_chat_data.IsLogo || height < 500 || lz_chat_data.KBOnly;
+    var hideLoginHeader = lz_chat_data.IsSmall || height < 600 || width < 400 || lz_chat_data.CheckoutActive || lz_chat_data.KBOnly;
+
+    lz_chat_data.TopMargin = (!hideHeader) ? 130 : 30;
+
+    if(lz_chat_get_frame_object('lz_header') != null)
+    {
+        lz_chat_get_frame_object('lz_header').style.display = (hideHeader) ? 'none' : '';
+        lz_chat_get_frame_object('lz_header').style.height = (!hideHeader) ? "99px" : "0";
+        lz_chat_get_frame_object('lz_chat_logo').style.display = (width < 450) ? 'none' : '';
+
+        if(lz_chat_get_frame_object('lz_chat_login') != null)
+        {
+            lz_chat_get_frame_object('lz_chat_logo').style.display = '';
+            lz_chat_get_frame_object('lz_chat_top_bg').style.display = (width < 450) ? 'none' : '';
+            lz_chat_get_frame_object('lz_input_header_box').style.display = (hideLoginHeader) ? 'none' : '';
+            lz_chat_get_frame_object('lz_chat_knowledgebase').style.top =
+            lz_chat_get_frame_object('lz_chat_login').style.top = (hideLoginHeader && hideHeader) ? (lz_chat_data.KBOnly) ? "0" : "38px" : ((hideLoginHeader) ? "137px" : ((!hideLoginHeader && !hideHeader) ? "217px" : "137px"));
+
+            if(lz_chat_data.KBOnly)
+            {
+                lz_chat_get_frame_object('lz_chat_param').style.display = 'none';
+                lz_chat_get_frame_object('lz_chat_knowledgebase').style.bottom = '0px';
+            }
+        }
+        else
+        {
+            lz_chat_get_frame_object('lz_chat_logo').style.display = (width < 450) ? 'none' : '';
+            lz_chat_get_frame_object('lz_chat_members_box').style.top =
+            lz_chat_get_frame_object('lz_chat_main').style.top = (lz_chat_data.TopMargin) + "px";
+            lz_chat_get_frame_object('lz_chat_com_frame').style.top = (lz_chat_data.TopMargin-31) + "px";
+            lz_chat_get_frame_object('lz_chat_options_table').style.top = (lz_chat_data.TopMargin) + "px";
+
+            if(lz_chat_get_frame_object('lz_cf_ra') != null)
+            {
+                if(hideHeader)
+                    lz_chat_get_frame_object('lz_cf_ra').appendChild(lz_chat_get_frame_object('lz_chat_feedback_init'));
+                else
+                    lz_chat_get_frame_object('lz_chat_feedback_init_frame').appendChild(lz_chat_get_frame_object('lz_chat_feedback_init'));
+            }
+        }
+    }
+
+
+    return !hideHeader;
+}
+if(typeof(encodeURIComponent) == 'undefined')
+{
+	encodeURIComponent = function(uri)
+	{
+		return (escape(uri));
+	}
+}
+
+function lz_array_indexOf(_hsa,_needle)
+{
+
+    if(_hsa!=null)
+        for(var i=0; i<_hsa.length; i++)
+            if(_hsa[i]==_needle)
+                return i;
+    return -1;
+}
+
+function lz_format_time_span(_seconds)
+{
+	var negative = false;
+	
+	if(_seconds < 0)
+	{
+		negative = true;
+		_seconds *= -1;
+	}
+	
+	var days = Math.floor(_seconds / 86400);
+	_seconds = _seconds - (days * 86400);
+	var hours = Math.floor(_seconds / 3600);
+	_seconds = _seconds - (hours * 3600);
+	var minutes = Math.floor(_seconds / 60);
+	_seconds = _seconds - (minutes * 60);
+	
+	var string = "";
+	if(days > 0)string += days+".";
+	if(hours >= 10)string += hours+":";
+	else if(hours < 10)string += "0"+hours+":";
+	if(minutes >= 10)string += minutes+":";
+	else if(minutes < 10)string += "0"+minutes+":";
+	if(_seconds >= 10)string += _seconds.toString();
+	else if(_seconds < 10)string += "0"+_seconds.toString();
+	
+	if(negative)
+		return "-" + string
+	return string;
+}
+
+function lz_jssess()
+{	
+	this.Save = lz_jssess_save;
+	this.Load = lz_jssess_load;
+	
+	this.DelimiterStart = "LZSDS";
+	this.DelimiterEnd = "LZSDE";
+
+	this.GeoResolutions = 0;
+	this.GeoResolved = new Array();
+	this.UserId = lz_user_id;
+	this.BrowserId = lz_browser_id;
+	this.ServerId = lz_server_id;
+	this.OVLCPos = "";
+	this.OVLCState = "0";
+	this.OVLCSound = 1;
+    this.Transcript = 1;
+	this.OVLCWM = 0;
+    this.ECH = 0;
+    this.TransFrom = "";
+    this.TransInto = "";
+    this.TransSID = "";
+    this.KBS = 1;
+
+	function lz_jssess_save()
+	{
+		var data = this.DelimiterStart + lz_global_base64_url_encode(this.BrowserId + ";" + this.UserId + ";" + this.GeoResolved  + ";" + this.GeoResolutions+ ";" + this.ServerId + ";"+ this.OVLCPos + ";"+ this.OVLCState + ";" + this.OVLCSound + ";" + this.OVLCWM + ";" + this.ECH + ";" + this.TransFrom + ";"+ this.TransInto + ";"+ this.TransSID + ";"+ this.Transcript + ";"+ this.KBS + ";") + this.DelimiterEnd;
+		if(window.name == null || window.name == "undefinded" || window.name  == "" || (window.name == null && window.name.indexOf(this.DelimiterStart) == -1))
+		{
+			if(window.name == null || window.name == "undefinded" || window.name  == "")
+				window.name = data;
+			else
+				window.name += data;
+		}
+		else
+		{
+			var regex = new RegExp(/\LZSDS.*?LZSDE/g);
+			window.name = window.name.replace(regex,"");
+			window.name += data;
+		}
+	}
+	
+	function lz_jssess_load()
+	{
+		var data = window.name;
+		if(data.indexOf(this.DelimiterStart) != -1)
+		{
+			data = lz_global_base64_url_decode(data.split(this.DelimiterStart)[1].split(this.DelimiterEnd)[0]).split(";");
+			if(this.ServerId == data[4])
+			{
+				this.BrowserId = data[0];
+				this.UserId = data[1];
+				this.GeoResolved = data[2].split(",");
+				this.GeoResolutions = data[3];
+				this.OVLCPos = data[5];
+				this.OVLCState = data[6];
+				this.OVLCSound = data[7];
+				this.OVLCWM = parseInt(data[8]);
+                this.ECH = parseInt(data[9]);
+                this.TransFrom = data[10];
+                this.TransInto = data[11];
+                this.TransSID = data[12];
+                this.Transcript = data[13];
+                this.KBS = data[14];
+			}
+		}
+	}
+}
+
+if (typeof String.prototype.endsWith !== 'function') {
+    String.prototype.endsWith = function(suffix) {
+        return this.indexOf(suffix, this.length - suffix.length) !== -1;
+    };
+}
+
+function lz_chat_window()
+{
+	this.BrowserId = "";
+	this.LastActive = 0;
+	this.Closed = false;
+	this.Deleted = false;
+}
+
+function lz_geo_resolver()
+{
+	this.ResolveAsync = lz_resolver_connect_async;
+	this.TimeoutConnection = lz_resolver_timeout_connection;
+	this.SetStatus = lz_resolver_set_status;
+	this.SetSpan = lz_resolver_set_span;
+	this.Status = 0;
+	this.Span = 0;
+	
+	this.OnEndEvent;
+	this.OnTimeoutEvent;	
+	this.OnSpanEvent;	
+	
+	var OnEnd;
+	var OnTimeout;
+	var OnSpan;
+
+	var lz_resolver_request;
+	var lz_resolver_timeout_timer;
+	
+	function lz_resolver_connect_async()
+	{
+		OnEnd = this.OnEndEvent;
+		OnTimeout = this.OnTimeoutEvent;
+		OnSpan = this.OnSpanEvent;
+		
+		lz_resolver_timeout_timer = setTimeout(this.TimeoutConnection,15000);
+		lz_resolver_request = document.createElement("script");
+		lz_resolver_request.id = "livezilla_geoscript";
+
+		lz_resolver_request.async = true;
+		lz_resolver_request.src = lz_geo_url + "&gv=1021&method=" + OnEnd + "&spanm=" + OnSpan + "&oak=" + lz_oak + "&ip=" + lz_mip;
+		lz_document_head.appendChild(lz_resolver_request);
+	}
+
+	function lz_resolver_timeout_connection()
+	{
+		if(OnTimeout != null)
+			OnTimeout();
+	}
+	
+	function lz_resolver_set_status(_status)
+	{
+		this.Status = _status;
+	}
+	
+	function lz_resolver_set_span(_span)
+	{
+		this.Span = _span;
+	}
+}
+
+function lz_global_get_window_height()
+{
+	return (lz_is_ie) ? document.documentElement.offsetHeight : window.innerHeight;
+}
+
+function lz_global_get_window_width(_inner)
+{
+    if(!_inner)
+    {
+        var rElm = document.documentElement.offsetHeight ? document.documentElement : document.body;
+        return rElm.clientWidth;
+    }
+    else
+        return ((lz_is_ie) ? document.documentElement.offsetWidth : window.innerWidth);
+}
+
+function lz_global_replace_breaks(_text)
+{
+	_text = _text.replace(/[\r\n]+/g, "<br>");
+	return _text.replace(/[\t]+/g, "&nbsp;&nbsp;&nbsp;");
+}
+
+function lz_global_base64_url_encode(_text)
+{
+	if(_text.length == 0)
+		return "";
+
+	_text = lz_global_base64_encode(_text.toString());
+	_text = _text.replace(/=/g, "_");
+	_text = _text.replace(/\+/g, "-");
+	_text = _text.replace(/\//g, ",");
+	return _text;
+}
+
+function lz_global_base64_url_decode(_text)
+{
+	if(!(_text != null && _text.length > 0))
+		return "";
+		
+	_text = _text.replace(/_/g,"=");
+	_text = _text.replace(/-/g,"+");
+	_text = _text.replace(/,/g,"../index.html");
+	_text = lz_global_base64_decode(_text);
+	return _text;
+}
+	
+function lz_global_base64_decode(_text)
+{
+	var base64_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+	var output = "";
+	var chr1, chr2, chr3;
+	var enc1, enc2, enc3, enc4;
+	var i = 0;
+	_text = _text.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+	while (i < _text.length) 
+	{
+		enc1 = base64_chars.indexOf(_text.charAt(i++));
+		enc2 = base64_chars.indexOf(_text.charAt(i++));
+		enc3 = base64_chars.indexOf(_text.charAt(i++));
+		enc4 = base64_chars.indexOf(_text.charAt(i++));
+		chr1 = (enc1 << 2) | (enc2 >> 4);
+		chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+		chr3 = ((enc3 & 3) << 6) | enc4;
+		output = output + String.fromCharCode(chr1);
+		if (enc3 != 64) 
+		{
+			output = output + String.fromCharCode(chr2);
+		}
+		if (enc4 != 64) 
+		{
+			output = output + String.fromCharCode(chr3);
+		}
+	}
+	output = lz_global_utf8_decode(output);
+	return output;
+}
+
+function lz_global_base64_encode(_input) 
+{
+	var base64_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+	var output = "";
+	var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+	var i = 0;
+
+	_input = lz_global_utf8_encode(_input);
+	while (i < _input.length) 
+	{
+		chr1 = _input.charCodeAt(i++);
+		chr2 = _input.charCodeAt(i++);
+		chr3 = _input.charCodeAt(i++);
+		enc1 = chr1 >> 2;
+		enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+		enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+		enc4 = chr3 & 63;
+		if(isNaN(chr2)) 
+		{
+			enc3 = enc4 = 64;
+		} 
+		else if(isNaN(chr3)) 
+		{
+			enc4 = 64;
+		}
+		output = output + base64_chars.charAt(enc1) + base64_chars.charAt(enc2) +	base64_chars.charAt(enc3) + base64_chars.charAt(enc4);
+	}
+	return output;
+}
+
+function lz_global_utf8_encode(_string) 
+{
+	_string = _string.replace(/\r\n/g,"\n");
+	var enc = "";
+	for (var n = 0; n < _string.length; n++) 
+	{
+		var c = _string.charCodeAt(n);
+		if (c < 128) 
+		{
+			enc += String.fromCharCode(c);
+		}
+		else if((c > 127) && (c < 2048))
+		{
+			enc += String.fromCharCode((c >> 6) | 192);
+			enc += String.fromCharCode((c & 63) | 128);
+		}
+		else 
+		{
+			enc += String.fromCharCode((c >> 12) | 224);
+			enc += String.fromCharCode(((c >> 6) & 63) | 128);
+			enc += String.fromCharCode((c & 63) | 128);
+		}
+	}
+	return enc;
+}
+
+function lz_global_utf8_decode(_string) 
+{
+    try
+    {
+        var dec = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+        while (i < _string.length)
+        {
+            c = _string.charCodeAt(i);
+            if (c < 128)
+            {
+                dec += String.fromCharCode(c);
+                i++;
+            }
+            else if((c > 191) && (c < 224))
+            {
+                c2 = _string.charCodeAt(i+1);
+                dec += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            }
+            else
+            {
+                c2 = _string.charCodeAt(i+1);
+                c3 = _string.charCodeAt(i+2);
+                dec += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+        return dec;
+    }
+    catch(ex)
+    {
+
+    }
+    return "";
+}
+
+function lz_set_title_mode()
+{
+    window.title = document.title = lz_title_modes[lz_title_step++ % 2];
+}
+
+function lz_switch_title_mode(_active)
+{
+	if(_active)
+	{
+		if(lz_title_timer == null)
+			lz_title_timer = setInterval("lz_set_title_mode()",1000);
+	}
+	else if(lz_title_timer != null)
+	{
+		clearInterval(lz_title_timer);
+		lz_title_timer = null;
+   		document.title = lz_title_modes[0];
+		lz_title_step = 0;
+	}
+}
+
+function lz_global_timestamp()
+{
+	var now = new Date();
+	var ts = Math.round((now.getTime()/1000));
+	return (ts);
+}
+
+function lz_global_get_time(_ts)
+{
+    var date = new Date(parseInt(_ts)*1000);
+    var timeStr = date.toLocaleTimeString();
+    if(timeStr=="Invalid Date")
+        return _ts;
+    return timeStr;
+}
+
+function lz_global_microstamp()
+{
+	var now = new Date();
+	var ts = now.getTime();
+	return (ts);
+}
+
+function lz_global_get_long_poll_runtime()
+{
+	if(lz_chat_data.LastConnectionFailed)
+		return 20;
+	var value = lz_chat_data.PollTimeout - lz_chat_data.ChatFrequency - 25;
+	if(value >= 60)
+		value = 65;
+	return value;
+}
+
+function lz_chat_get_locale_time()
+{
+	var time = new Date().toLocaleTimeString()
+	time = time.split(" (");
+	return time[0];
+}
+
+function lz_chat_get_locale_date()
+{
+	var date = new Date().toLocaleString();
+	date = date.split(" (");
+	return date[0];
+}
+
+function lz_global_handle_exception(exception,file,line)
+{
+	//alert(exception+file+line);
+	return true;
+}
+
+function lz_global_trim(_str) 
+{
+	return _str.replace(/^\s+|\s+$/g,"");
+}
+
+function lz_global_htmlentities(_value) 
+{
+	_value = _value.replace(/\</g,"&lt;");
+	_value = _value.replace(/\>/g,"&gt;");
+	return _value;
+}
+
+function lz_global_get_page_offset_y()
+{
+	if(window.pageYOffset != null)
+		return window.pageYOffset;
+	else
+		return Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+}
+
+function lz_global_get_page_offset_x()
+{
+	return 0;
+	if(window.pageXOffset != null)
+	{
+		return window.pageXOffset;
+	}
+	else
+	{
+		return Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
+	}
+}
+
+function lz_global_impose_max_length(_object, _max)
+{
+    if(_object.value.length > _max)
+        _object.value = _object.value.substring(0,_max);
+}
+
+function lz_chat_save_input_value(_id,_value,_doc)
+{
+    try
+    {
+        if(lz_array_indexOf(lz_chat_data.InputFieldIndices,_id) > -1)
+            lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,_id)].Value = _value.toString();
+
+        if(_id == 114 && lz_shared_kb_auto_search)
+        {
+            if(_value.length > 10)
+            {
+                if(lz_shared_kb_last_search_time < (lz_global_timestamp()-2))
+                {
+                    if (typeof lz_chat_get_frame_object == 'function')
+                        lz_chat_get_frame_object('lz_chat_kb_input').value = _value;
+                    lz_chat_init_search_kb(true,true);
+                }
+            }
+        }
+    }
+    catch(e){}
+    return true;
+}
+
+function lz_chat_get_input_value(_id)
+{
+    try{return lz_chat_data.InputFieldValues[lz_array_indexOf(lz_chat_data.InputFieldIndices,_id)].Value;}
+    catch(e) {return "";}
+}
+
+function lz_chat_get_input(_index)
+{
+    for(var i = 0;i< lz_chat_data.InputFieldIndices.length;i++)
+    {
+        var findex = lz_chat_data.InputFieldIndices[i];
+        if(_index == findex)
+            return lz_chat_data.InputFieldValues[i];
+    }
+    return null;
+}
+
+function lz_group(_id,_amount,_description,_email,_document,_cihidden,_cimandatory,_tihidden,_timandatory,_cinf,_cmbinf,_tinf,_com)
+{
+    this.Id = _id;
+    this.Amount = _amount;
+    this.Description = (_description.length > 0) ? _description : _id;
+    this.ChatInformation = _cinf;
+    this.TicketInformation = _tinf;
+    this.CallMeBackInformation = _cmbinf;
+    this.Email = _email;
+    this.Option = null;
+    this.ActiveDocument = _document;
+    this.UpdateOption = lz_group_create_option;
+    this.Update = lz_group_update;
+    this.Changed = false;
+    this.UpdateOption();
+    this.ChatInputsHidden = _cihidden;
+    this.ChatInputsMandatory = _cimandatory;
+    this.TicketInputsHidden = _tihidden;
+    this.TicketInputsMandatory = _timandatory;
+    this.ChatVouchersRequired =  _com;
+    this.StatusIcon = true;
+
+    function lz_group_create_option()
+    {
+        try
+        {
+            if(this.Option == null)
+                this.Option = this.ActiveDocument.createElement('option');
+
+            this.Option.value = this.Id;
+            this.Option.name = this.Email;
+            this.Option.group = this;
+
+            if(this.Amount == 0)
+            {
+                this.Option.style.color = "#787878";
+                this.Option.style.background = "#f7f7f7";
+            }
+            else
+            {
+                this.Option.style.color = "#000000";
+                this.Option.style.background = "#FFFFFF";
+            }
+            this.Option.label = " " + this.Description;
+            this.Option.text = " " + this.Description;
+        }
+        catch(e)
+        {
+
+
+        }
+
+    }
+
+    function lz_group_update(_id,_amount,_description,_email)
+    {
+        if(this.Id != _id || this.Amount != _amount || this.Description != ((_description.length > 0) ? _description : _id) || this.Email != _email)
+        {
+            this.Id = _id;
+            this.Amount = _amount;
+            this.Description = (_description.length > 0) ? _description : _id;
+            this.Email = _email
+            this.Changed = true;
+        }
+        else
+            this.Changed = false;
+    }
+}
+
+function lz_group_list(_document,_selectBox)
+{
+    this.HeaderOnline = null;
+    this.HeaderOffline = null;
+    this.ForceSelectOption = null;
+    this.ForceSelectMade=false;
+    this.Groups = new Array();
+    this.SelectBox = _selectBox;
+    this.ActiveDocument = _document;
+    this.GroupOnline = false;
+    this.GroupOffline = null;
+    this.StatusIcon = true;
+
+    this.Add = lz_group_list_add;
+    this.Update = lz_group_list_update;
+    this.Place = lz_group_list_place_group;
+    this.CreateHeader = lz_group_list_create_header;
+    this.PlaceGroup = lz_group_list_place_group;
+    this.GetGroupById = lz_group_list_get_group_by_id;
+    this.SelectGroupById = lz_group_list_select_group_by_id;
+
+    function lz_group_list_add(_id,_amount,_description,_email,_cihidden,_cimandatory,_tihidden,_timandatory,_cinf,_cmbinf,_tinf,_com)
+    {
+        var existing = false;
+        var currentGroup;
+        var lastGroup;
+        for(var i=0;i<this.Groups.length;i++)
+        {
+            if(this.Groups[i].Id == _id)
+            {
+                this.Groups[i].Update(_id,_amount,_description,_email);
+                currentGroup = this.Groups[i];
+                existing = true;
+                break;
+            }
+        }
+
+        if(!existing)
+        {
+            currentGroup = new lz_group(_id,_amount,_description,_email,this.ActiveDocument,_cihidden,_cimandatory,_tihidden,_timandatory,_cinf,_cmbinf,_tinf,_com);
+            currentGroup.StatusIcon = this.StatusIcon;
+            this.Groups.push(currentGroup);
+        }
+
+        this.PlaceGroup(currentGroup,lastGroup,!existing);
+        lastGroup = currentGroup;
+    }
+
+    function lz_group_list_update(_groups)
+    {
+
+        try
+        {
+            if(_groups.length == 0)
+            {
+                for(var i = 0;i <this.SelectBox.length;i++)
+                    if(this.SelectBox.options[i] != this.HeaderOffline)
+                        this.SelectBox.removeChild(this.SelectBox.options[i]);
+
+                if(this.HeaderOffline != null && this.HeaderOffline.parentNode != this.SelectBox)
+                    this.SelectBox.appendChild(this.HeaderOffline);
+            }
+            else
+            {
+                var addedGroups = Array();
+                var groups = _groups.split(";");
+
+                this.GroupOnline =
+                    this.GroupOffline = false;
+
+                if(this.HeaderOffline && (this.HeaderOffline.parentNode == null || (this.HeaderOffline.parentNode != null && this.HeaderOffline.parentNode != this.SelectBox)))
+                    this.SelectBox.appendChild(this.HeaderOffline);
+
+                for(var i = 0;i <groups.length;i++)
+                {
+                    contents = groups[i].split(",");
+                    addedGroups.push(lz_global_base64_decode(contents[0]));
+                    this.GroupOnline = (this.GroupOnline || lz_global_base64_decode(contents[1]) > 0);
+                    this.GroupOffline = (this.GroupOffline || lz_global_base64_decode(contents[1]) == 0);
+                    this.Add((lz_global_base64_decode(contents[0])),(lz_global_base64_decode(contents[1])),(lz_global_base64_decode(contents[2])),lz_global_base64_decode(contents[3]),eval(lz_global_base64_decode(contents[4])),eval(lz_global_base64_decode(contents[5])),eval(lz_global_base64_decode(contents[6])),eval(lz_global_base64_decode(contents[7])),lz_global_base64_decode(contents[8]),lz_global_base64_decode(contents[9]),lz_global_base64_decode(contents[10]),eval(lz_global_base64_decode(contents[11])));
+                }
+
+                if(this.HeaderOnline != null)
+                {
+                    if(!this.GroupOnline && this.HeaderOnline.parentNode == this.SelectBox)
+                        this.SelectBox.removeChild(this.HeaderOnline);
+                    else if(this.GroupOnline && (this.HeaderOnline.parentNode == null || (this.HeaderOnline.parentNode != null && this.HeaderOnline.parentNode != this.SelectBox)))
+                        this.SelectBox.insertBefore(this.HeaderOnline,this.SelectBox.childNodes[0]);
+                }
+
+                if(!this.GroupOffline && this.HeaderOffline != null && this.HeaderOffline.parentNode == this.SelectBox)
+                    this.SelectBox.removeChild(this.HeaderOffline);
+                if(this.Groups.length > addedGroups.length)
+                {
+                    var existing;
+                    for(var i = 0;i <this.Groups.length;i++)
+                    {
+                        existing = false;
+                        for(var j = 0;j <addedGroups.length;j++)
+                        {
+                            if(addedGroups[j] == this.Groups[i].Id)
+                                existing = true;
+                        }
+                        if(!existing)
+                        {
+                            this.Groups[i].Option.parentNode.removeChild(this.Groups[i].Option);
+                            this.Groups.splice(i,1);
+                        }
+                    }
+                }
+
+                if(this.SelectBox != null)
+                    lz_chat_change_group(this.SelectBox,false);
+
+                if(lz_chat_data.ForceGroupSelect && !lz_chat_data.ForceSelectMade)
+                {
+                    if(this.ForceSelectOption != null && this.ForceSelectOption.parentNode == null)
+                    {
+                        this.SelectBox.appendChild(this.ForceSelectOption);
+                        this.SelectBox.selectedIndex=this.SelectBox.childNodes.length-1;
+                        this.SelectBox.style.backgroundImage = "none";
+                    }
+                }
+            }
+        }
+        catch(e)
+        {
+
+        }
+
+
+    }
+
+    function lz_group_list_place_group(_group,_lastGroup,_new)
+    {
+        if(_group != null && _group.Option != null && _group.Option.parentNode != this.SelectBox || _group.Changed)
+            if(_group.Amount > 0)
+            {
+                this.SelectBox.insertBefore(_group.Option,this.HeaderOffline);
+            }
+            else
+            {
+                this.SelectBox.appendChild(_group.Option);
+            }
+
+        _group.UpdateOption();
+    }
+
+    function lz_group_list_create_header(_pleaseSelectTitle)
+    {
+        if(this.SelectBox.childNodes.length == 0)
+        {
+            this.ForceSelectOption = this.ActiveDocument.createElement('option');
+            this.ForceSelectOption.text = _pleaseSelectTitle;
+            this.ForceSelectOption.style.color = "#000000";
+            this.ForceSelectOption.style.background = "#FFFFFF";
+            this.ForceSelectOption.style.backgroundImage = "none";
+        }
+    }
+
+    function lz_group_list_get_group_by_id(_id)
+    {
+        for(var i = 0;i <this.Groups.length;i++)
+        {
+            if(this.Groups[i].Id == _id)
+                return this.Groups[i];
+        }
+        return null;
+    }
+
+    function lz_group_list_select_group_by_id(_id,_box)
+    {
+        for(var i = 0;i < _box.length;i++)
+        {
+            if(_id == _box.childNodes[i].value)
+            {
+                _box.selectedIndex = i;
+                return;
+            }
+        }
+
+
+    }
+}
+
+function lz_chat_input(_index,_active,_caption,_infoText,_name,_type,_value,_validation,_validationURL,_validationTimeout,_validationContinueOnTimeout)
+{
+    this.Index = _index;
+    this.Active = _active;
+    this.Caption = lz_global_base64_decode(_caption);
+    this.InfoText = lz_global_base64_decode(_infoText);
+    this.Name = lz_global_base64_decode(_name);
+    this.Type = _type;
+    this.Value = lz_global_base64_decode(_value);
+    this.Validation = _validation;
+    this.ValidationURL = lz_global_base64_decode(_validationURL);
+    this.ValidationTimeout = _validationTimeout;
+    this.ValidationContinueOnTimeout = _validationContinueOnTimeout;
+    this.ValidationScript;
+    this.ValidationTimeoutObject = null;
+    this.ValidationContinueAt;
+    this.Validated = false;
+    this.ValidationResult = null;
+    //this.ValidationFrame;
+    this.Validate = lz_chat_input_validate;
+    this.SetStatus = lz_chat_input_set_status;
+    this.IsHiddenGeneral = lz_chat_is_hidden_general;
+
+    function lz_chat_input_validate(_contFunc)
+    {
+        this.ValidationContinueAt = _contFunc+"()";
+        this.ValidationTimeoutObject = setTimeout('lz_validate_input_result(-1,'+this.Index.toString()+')',this.ValidationTimeout*1000);
+        var get = this.ValidationURL.replace('<!--input_id-->',this.Index.toString()).replace('<!--value-->',this.Value);
+        if(get.indexOf("?") != -1)
+            get += "&timestamp=" + lz_global_timestamp();
+        else
+            get += "?timestamp=" + lz_global_timestamp();
+        var newScript = document.createElement("script");
+        newScript.id = "livezilla_vscript" + this.Index.toString();
+        newScript.src = get;
+        document.getElementsByTagName("head")[0].appendChild(newScript);
+    }
+
+    function lz_chat_input_set_status(_frame,_enabled)
+    {
+        if(_frame != null)
+            if(lz_chat_get_frame_object('').getElementsByName("form_"+this.Index).length == 1)
+                lz_chat_get_frame_object('').getElementsByName("form_"+this.Index)[0].disabled=!_enabled;
+    }
+
+    function lz_chat_is_hidden_general(_groups,_chat)
+    {
+        try{
+        for(var i = 0;i < _groups.length;i++)
+        {
+            if(_chat && lz_array_indexOf(_groups[i].ChatInputsHidden,this.Index) > -1)
+                return true;
+            else if(!_chat && lz_array_indexOf(_groups[i].TicketInputsHidden,this.Index) > -1)
+                return true;
+        }
+        }catch(ex){}
+        return false;
+    }
+}
+
+function lz_chat_execute(_js)
+{
+    try
+    {
+        eval(lz_global_base64_decode(_js));
+    }
+    catch(ex)
+    {
+
+    }
+}
+
+function lz_fade_in(_element,_freq)
+{
+    var op = 0;
+    var timer = setInterval(function ()
+    {
+        if (op >= 1)
+            clearInterval(timer);
+        if (op >= 0.1)
+            _element.style.display = '';
+        _element.style.opacity = op;
+        op += 0.1;
+    }, _freq);
+}
+
+function lz_fade_out(_element,_freq)
+{
+    var op = 1;
+    var timer = setInterval(function ()
+    {
+        if (op <= 0.1)
+        {
+            clearInterval(timer);
+            _element.style.display = 'none';
+        }
+        _element.style.opacity = op;
+        op -= 0.1;
+    }, _freq);
+}
+function lz_connector(_url,_post,_timeout)
+{
+	this.Url = _url;
+	this.Post = _post;
+	this.Timeout = _timeout;	
+	this.DataFormat = false;
+	this.ChangeState = lz_connector_change_state;
+	this.ConnectAsync = lz_connector_connect_async;
+	this.ConnectSync = lz_connector_connect_sync;	
+	this.TimeoutConnection = lz_connector_timeout_connection;	
+
+	this.OnEndEvent;
+	this.OnErrorEvent;
+	this.OnTimeoutEvent;
+    this.OnProgressEvent;
+    this.OnLoadEvent;
+
+	var OnEnd;
+	var OnError;
+	var OnTimeout;
+    var OnProgress;
+
+	var lz_connector_request;
+	var lz_connector_timeout_timer;
+	var lz_connector_aborted = false;
+
+	function lz_connector_connect_async()
+	{
+		OnEnd = this.OnEndEvent;
+		OnError = this.OnErrorEvent;
+		OnTimeout = this.OnTimeoutEvent;
+        OnProgress = this.OnProgressEvent;
+
+        this.DataFormat = (typeof this.Post).toLowerCase() != "string";
+
+		if(this.Timeout > 0)
+			lz_connector_timeout_timer = setTimeout(this.TimeoutConnection,this.Timeout);
+
+		lz_connector_request = lz_connector_create_request_object(this.DataFormat);
+		lz_connector_request.open('../404.html', this.Url, true);
+		lz_connector_request.onreadystatechange = lz_connector_change_state;
+
+        if(this.OnProgressEvent != null)
+            lz_connector_request.upload.addEventListener("progress", this.OnProgressEvent, false);
+
+        if(this.OnLoadEvent != null)
+            lz_connector_request.addEventListener("load", this.OnLoadEvent, false);
+
+        if(!this.DataFormat)
+        {
+		    lz_connector_request.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            //lz_connector_request.setRequestHeader("Content-length", this.Post.length);
+            //lz_connector_request.setRequestHeader('Connection', 'close');
+        }
+		lz_connector_request.send(this.Post);
+	}
+	
+	function lz_connector_connect_sync()
+	{
+		lz_connector_request=lz_connector_create_request_object(false);
+		lz_connector_request.open('../404.html', this.Url, true);  
+		lz_connector_request.setRequestHeader('Content-Type','application/x-www-form-urlencoded');   
+		lz_connector_request.setRequestHeader("Content-length", this.Post.length); 
+		lz_connector_request.setRequestHeader('Connection', 'close');     
+		lz_connector_request.send(this.Post);
+		return lz_connector_request.responseText;                                                          
+	}
+	
+	function lz_connector_change_state() 
+	{	
+		if (lz_connector_request.readyState == 4)
+		{
+			if(lz_connector_request.status == 100 || lz_connector_request.status == 200)
+				lz_connector_end_connection(lz_connector_request.status,lz_connector_request.responseText);
+			else
+				lz_connector_error_connection(lz_connector_request.status,lz_connector_request.responseText);
+		}
+	}
+	
+	function lz_connector_is_running() 
+	{
+		return ( lz_connector_request.readyState > 0 &&  lz_connector_request.readyState < 4);
+	}
+	
+	function lz_connector_end_connection(_status, _response)
+	{
+		clearTimeout(lz_connector_timeout_timer);
+		if(!lz_connector_aborted && OnEnd != null)
+			OnEnd(_status, _response);
+	}
+	
+	function lz_connector_error_connection(_status, _response)
+	{	
+		clearTimeout(lz_connector_timeout_timer);
+		if(!lz_connector_aborted && OnError != null)
+			OnError(_status, _response);
+	}
+	
+	function lz_connector_timeout_connection()
+	{
+		lz_connector_aborted = true;
+		if(lz_connector_is_running())
+			lz_connector_request.abort();
+		
+		if(OnTimeout != null)
+			OnTimeout();
+	}
+	
+	function lz_connector_create_request_object(_reqxmlhttp)
+	{
+		var requestObject = null;
+
+        if(_reqxmlhttp)
+            return new XMLHttpRequest;
+
+		try 
+		{
+			requestObject = new ActiveXObject("MSXML2.XMLHTTP");
+		}
+		catch (err_MSXML2) 
+		{
+			try 
+			{
+				requestObject = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			catch (err_Microsoft) 
+			{
+				if (typeof XMLHttpRequest != "undefined") 
+					requestObject = new XMLHttpRequest;
+			}
+		}
+		return requestObject;
+	}
+}
+
+
+</script>
+</head>
+<body style="height:100%;margin:0;padding:0;" onresize="setTimeout('lz_chat_resize()',10);" onmouseover="lz_chat_change_window_state(false);">
+    <iframe id="lz_chat_content" name="lz_chat_content_frame" src="chat06e3.html?template=lz_chat_frame_lgin&amp;code=U0VSVkVSUEFHRQ__" onload="lz_chat_release_frame('lz_chat_content_frame');"></iframe>
+</body>
+
+<!-- Mirrored from www.fivehost.com.br/chat/chat.php?code=U0VSVkVSUEFHRQ__ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 31 May 2016 04:25:52 GMT -->
+</html>

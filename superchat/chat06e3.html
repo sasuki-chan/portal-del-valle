@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html dir="">
+
+<!-- Mirrored from www.fivehost.com.br/superchat/chat.php?template=lz_chat_frame_lgin&code=U0VSVkVSUEFHRQ__ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 31 May 2016 04:25:35 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+	<META NAME="robots" CONTENT="noindex,follow">
+	<title>www.fivehost.com.br</title>
+	<link rel="stylesheet" type="text/css" href="templates/style_chat.min.css">
+</head>
+<body style="padding:0;margin:0;overflow:hidden;">
+	<div id="lz_chat_dialog">
+    <table style="height:100%;width:100%;">
+        <tr>
+            <td style="text-align:center;vertical-align: middle;">
+                <div id="lz_chat_dialog_box">
+                    <div id="lz_chat_dialog_header">&nbsp;www.fivehost.com.br</div>
+
+                    <div id="lz_chat_dialog_text_frame">
+                        <div id="lz_chat_dialog_text"></div>
+                    </div>
+
+                    <div id="lz_chat_dialog_resource_frame">
+                        <iframe id="lz_chat_dialog_resource" src="#"></iframe>
+                    </div>
+
+                    <fieldset id="lz_chat_file_frame" style="display:none;margin:20px;">
+                        <legend>
+                            <label>Send file&nbsp;</label>
+                        </legend>
+                        <iframe id="lz_chat_file_upload_frame"></iframe>
+                    </fieldset>
+
+                    <div id="lz_chat_dialog_footer">
+                        <input type="button" class="lz_form_button" id="lz_chat_dialog_print" value="Print" onclick="document.getElementById('lz_chat_dialog_resource').contentWindow.print();">
+                        <input type="button" class="lz_form_button" id="lz_chat_dialog_button" value="OK">
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="lz_chat_dialog_bg"></div>
+
+	<div id="lz_chat_loading">
+        <div style="position:relative;top:40%;color:#ababab;">Loading ...<br><br><img src="images/chat_loading.gif" alt=""></div>
+    </div>
+	<!--errors-->
+    <div id="lz_header">
+    <div id="lz_chat_logo"><img src="images/carrier_logo.gif" border="0"><br></div>
+    <div id="lz_chat_representative">
+        <div id="lz_chat_operator_details">
+            <div id="lz_chat_operator_fullname"></div>
+            <div id="lz_chat_operator_groupname"></div>
+        </div>
+        <div id="lz_chat_intern_image"></div>
+        <div id="lz_chat_feedback_init_frame">
+            <div id="lz_chat_feedback_init" class="lz_chat_clickable_image" onclick="parent.lz_chat_show_feedback();" title="Rate representative"></div>
+        </div>
+    </div>
+    <div id="lz_chat_top_bg"><img src="images/carrier_header.gif" border="0"><br></div>
+    <div id="lz_chat_vcard_box" style="display:none;">
+        <a id="lz_chat_vcard_text" title="Download visitcard" onmouseover="document.getElementById('lz_chat_site_title').innerHTML='&nbsp;&nbsp;Download visitcard';" onmouseout="document.getElementById('lz_chat_site_title').innerHTML='&nbsp;&nbsp;www.fivehost.com.br';">Visitcard</a>
+    </div>
+</div>
+    <div id="lz_chat_navigation">
+        <table>
+            <tr>
+                <td style="width:15px;"></td>
+                <td>
+                    <ul class="lz_chat_navigation_tabs">
+                        <li id="lz_tab_chat" class="lz_chat_navigation_tab" onclick="parent.lz_chat_tab_set_active('chat',true);">
+                            <span id="lz_chat_navigation_status" class="lz_chat_navigation_status_offline"></span>
+                            <span>Live Chat</span>
+                        </li>
+                        <li id="lz_tab_callback" class="lz_chat_navigation_tab" onclick="parent.lz_chat_tab_set_active('callback',true);">
+                            Request a Callback
+                        </li>
+                        <li id="lz_tab_ticket" class="lz_chat_navigation_tab" onclick="parent.lz_chat_tab_set_active('ticket',true);">
+                            Leave a Message
+                        </li>
+                        <li id="lz_tab_knowledgebase" class="lz_chat_navigation_tab" onclick="parent.lz_chat_tab_set_active('knowledgebase',true);">
+                            <span>Knowledgebase</span>
+                            <div id="lz_chat_kb_icon" style="visibility:hidden"></div>
+                        </li>
+                    </ul>
+                </td>
+                <td style="width:5px;"></td>
+            </tr>
+        </table>
+    </div>
+    <div id="lz_input_header_box" class="lz_input_header">
+        <table style="height:100%;">
+            <tr>
+                <td style="width:5px;"></td>
+                <td style="vertical-align:top;" id="lz_header_type_icon">
+                    <img id="lz_header_icon_operator_close" src="images/icon_close.png"  alt="" onclick="parent.lz_chat_unset_operator();">
+                    <img id="lz_header_icon_operator" src="#"  alt="">
+                </td>
+                <td style="vertical-align:middle;padding-right:10px;">
+                    <span id="lz_header_title"></span><br>
+                    <span id="lz_form_info_field"></span>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <div id="lz_chat_knowledgebase" onscroll="parent.lz_chat_kb_scroll(this);" class="lz_chat_module">
+        <table style="width:100%;">
+            <tr>
+                <td>
+                    <br>
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="width:35px;"></td>
+                            <td style="width:auto;white-space:nowrap;text-wrap:none;text-align:center;vertical-align:middle;">
+                                <input id="lz_chat_kb_input" class="lz_form_base lz_form_box" placeholder="What can we help you with?">
+                                <input id="lz_chat_kb_search"type="button" class="lz_form_button unselectable" value="Search" onclick="parent.lz_chat_init_search_kb(true,false);">
+                                <input id="lz_chat_kb_reset" type="button" class="lz_form_button unselectable" onclick="document.getElementById('lz_chat_kb_input').value='';parent.lz_chat_init_search_kb(true,false);">
+                            </td>
+                            <td style="width:35px;"></td>
+                        </tr>
+                    </table>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                    <table class="lz_input center" style="max-width:100%;">
+                        <tr>
+                            <td id="lz_chat_kb_results" style="padding:10px 20px;text-align:center;vertical-align:top;"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+	<div id="lz_chat_login" class="lz_chat_module">
+        <form name="lz_login_form" method="post" action="http://www.fivehost.com.br/superchat/chat.php?template=lz_chat_frame_chat&amp;code=U0VSVkVSUEFHRQ__" target="lz_chat_content_frame" style="padding:0px;margin:0px;">
+		<table width="100%">
+			<tr>
+				<td align="center" valign="top">
+                    <br>
+                    <div id="lz_chat_ticket_success" style="display:none;"><br><b>Thank you!</b><br>We have received your message and will be responding to your enquiry as soon as possible.</div>
+                    <div id="lz_form_details" style="display:none;">
+						<input type="hidden" id="lz_form_active_111" value="true">
+<table id="lz_form_111" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_111" class="lz_form_field"><strong>Name:</strong></td>
+		<td><input name="form_111" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('111',this.value);" onkeyup="return parent.lz_chat_save_input_value('111',this.value);"><div class="lz_form_info_box" id="lz_form_info_111"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_111" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_112" value="true">
+<table id="lz_form_112" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_112" class="lz_form_field"><strong>Email:</strong></td>
+		<td><input name="form_112" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('112',this.value);" onkeyup="return parent.lz_chat_save_input_value('112',this.value);"><div class="lz_form_info_box" id="lz_form_info_112"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_112" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_113" value="true">
+<table id="lz_form_113" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_113" class="lz_form_field"><strong>Company:</strong></td>
+		<td><input name="form_113" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('113',this.value);" onkeyup="return parent.lz_chat_save_input_value('113',this.value);"><div class="lz_form_info_box" id="lz_form_info_113"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_113" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_114" value="true" >
+<table id="lz_form_114" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_114" class="lz_form_field"><strong>Question:</strong></td>
+		<td><textarea id="a114" name="form_114" onmouseover="parent.lz_chat_resize_area_int(this.id,400,110);" class="lz_form_base lz_form_box lz_form_area" onchange="parent.lz_global_impose_max_length(this, 64000);parent.lz_chat_save_input_value('114',this.value);" onkeyup="parent.lz_global_impose_max_length(this, 64000);parent.lz_chat_save_input_value('114',this.value);" onkeydown="return parent.lz_chat_save_input_value('114',this.value);"></textarea><div class="lz_form_info_box" id="lz_form_info_114"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_114" style="display:none;"></div></td>
+	</tr>
+    <tr>
+    <td></td>
+    <td>
+        <div id="lz_chat_kb_match_info">
+            <span id="lz_chat_kb_match_info_text"><span>There are Knowlegdebase entries matching your question.</span></span>
+            <img src="images/icon_close.png" class="lz_chat_clickable_image" onclick="parent.lz_chat_kb_deactivate();" style="position:absolute;top:28px;right:20px;">
+            <div style="text-align:center;line-height:30px;background:#73be28;" class="lz_chat_kb_match_button" onclick="parent.lz_chat_tab_set_active('knowledgebase',true);parent.lz_chat_kb_deactivate();">Show</div>
+        </div>
+    </td>
+    <td></td>
+</tr>
+</table>
+
+<input type="hidden" id="lz_form_active_116" value="false">
+<table id="lz_form_116" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_116" class="lz_form_field"><strong>Phone:</strong></td>
+		<td><input name="form_116" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('116',this.value);" onkeyup="return parent.lz_chat_save_input_value('116',this.value);"><div class="lz_form_info_box" id="lz_form_info_116"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_116" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_0" value="false">
+<table id="lz_form_0" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_0" class="lz_form_field"></td>
+		<td><input name="form_0" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('0',this.value);" onkeyup="return parent.lz_chat_save_input_value('0',this.value);"><div class="lz_form_info_box" id="lz_form_info_0"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_0" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_1" value="false">
+<table id="lz_form_1" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_1" class="lz_form_field"></td>
+		<td><input name="form_1" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('1',this.value);" onkeyup="return parent.lz_chat_save_input_value('1',this.value);"><div class="lz_form_info_box" id="lz_form_info_1"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_1" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_2" value="false">
+<table id="lz_form_2" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_2" class="lz_form_field"></td>
+		<td><input name="form_2" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('2',this.value);" onkeyup="return parent.lz_chat_save_input_value('2',this.value);"><div class="lz_form_info_box" id="lz_form_info_2"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_2" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_3" value="false">
+<table id="lz_form_3" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_3" class="lz_form_field"></td>
+		<td><input name="form_3" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('3',this.value);" onkeyup="return parent.lz_chat_save_input_value('3',this.value);"><div class="lz_form_info_box" id="lz_form_info_3"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_3" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_4" value="false">
+<table id="lz_form_4" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_4" class="lz_form_field"></td>
+		<td><input name="form_4" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('4',this.value);" onkeyup="return parent.lz_chat_save_input_value('4',this.value);"><div class="lz_form_info_box" id="lz_form_info_4"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_4" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_5" value="false">
+<table id="lz_form_5" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_5" class="lz_form_field"></td>
+		<td><input name="form_5" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('5',this.value);" onkeyup="return parent.lz_chat_save_input_value('5',this.value);"><div class="lz_form_info_box" id="lz_form_info_5"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_5" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_6" value="false">
+<table id="lz_form_6" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_6" class="lz_form_field"></td>
+		<td><input name="form_6" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('6',this.value);" onkeyup="return parent.lz_chat_save_input_value('6',this.value);"><div class="lz_form_info_box" id="lz_form_info_6"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_6" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_7" value="false">
+<table id="lz_form_7" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_7" class="lz_form_field"></td>
+		<td><input name="form_7" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('7',this.value);" onkeyup="return parent.lz_chat_save_input_value('7',this.value);"><div class="lz_form_info_box" id="lz_form_info_7"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_7" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_8" value="false">
+<table id="lz_form_8" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_8" class="lz_form_field"></td>
+		<td><input name="form_8" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('8',this.value);" onkeyup="return parent.lz_chat_save_input_value('8',this.value);"><div class="lz_form_info_box" id="lz_form_info_8"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_8" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_9" value="false">
+<table id="lz_form_9" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_9" class="lz_form_field"></td>
+		<td><input name="form_9" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('9',this.value);" onkeyup="return parent.lz_chat_save_input_value('9',this.value);"><div class="lz_form_info_box" id="lz_form_info_9"></div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_9" style="display:none;"></div></td>
+	</tr>
+</table><input type="hidden" id="lz_form_active_115" value="true">
+<table id="lz_form_115" class="lz_input">
+	<tr>
+		<td id="lz_form_caption_115" class="lz_form_field">Voucher code:</td>
+		<td><input name="form_115" class="lz_form_base lz_form_box" maxlength="254" onchange="parent.lz_chat_save_input_value('115',this.value);" onkeyup="return parent.lz_chat_save_input_value('115',this.value);"><div class="lz_form_info_box" id="lz_form_info_115">Please note that a valid chat voucher is required in order to initiate chat.</div></td>
+        <td class="lz_form_icon"><div id="lz_form_mandatory_115" style="display:none;"></div></td>
+	</tr>
+</table>
+						<table class="lz_input" id="lz_group_selection_box">
+							<tr>
+								<td class="lz_form_field"><strong>Department:</strong></td>
+                                <td style="width:24px;"><div id="lz_chat_group_status" class="lz_chat_input_icon lz_chat_input_icon_online"></div></td>
+								<td valign="middle">
+                                    <select id="lz_form_groups" class="lz_form_box" name="intgroup" onChange="parent.lz_chat_change_group(this,true);this.blur();" onKeyUp="this.blur();" onclick="parent.lz_chat_pre_change_group(this);"></select>
+                                </td>
+                                <td class="lz_form_icon"></td>
+                            </tr>
+						</table>
+                        <br>
+                        <table class="lz_input" style="margin-top:15px;width:100%;">
+                            <tr>
+                                <td class="lz_form_field">
+                                    <div style="display:none;" id="lz_form_mandatory">
+                                        <table><tr><td style="vertical-align:top;"><div class="lz_input_icon lz_required"></div></td><td><span class="lz_index_help_text">Required</span></td></tr></table>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="button" id="lz_action_button" class="lz_form_button" disabled>
+                                    <input type="button" value="Buy voucher" id="buy_voucher_button" onclick="parent.lz_chat_buy_voucher_navigate('voucher_select',false);" class="lz_form_button">
+                                </td>
+                                <td class="lz_form_icon"></td>
+                            </tr>
+                        </table>
+					</div>
+				</td>
+			</tr>
+		</table>
+		</form>
+	</div>
+	<div style="position:absolute;left:20px;bottom:30px;display:none;z-index:-1;">
+		<img src="images/lz_ssl_secured_chat.gif" alt="" width="123" height="45">
+	</div>
+	
+	<input type="hidden" name="form_chat_call_me_back">
+    <div id="lz_chat_param"><a class="lz_chat_main_link" href="http://www.livezilla.net/" target="_blank">Powered by LiveZilla Live Help</a></div>
+</body>
+
+<!-- Mirrored from www.fivehost.com.br/superchat/chat.php?template=lz_chat_frame_lgin&code=U0VSVkVSUEFHRQ__ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 31 May 2016 04:25:35 GMT -->
+</html>
